@@ -1,7 +1,9 @@
 # Py-HaloPSA
+
 Python module for the HaloPSA API
 
 ## Quick-Start
+
 1. [recommended] create and activate your environment: `python -m vnev env && . env/bin/activate`
 2. install requirements: `python -m pip install -r requirements.txt`
 3. copy the configuration template to a new file, ".env"
@@ -11,16 +13,12 @@ Python module for the HaloPSA API
 7. If all varialbles in your config file (.env) are correct, you will have authenticated on import.
 8. Check by calling `haloPSA.logged_in`
 
+## haloPSA
+
+The main object of the module. All calls to the API will stem from this. Remeber that haloPSA will attempt to authenticate on import.
+
 ## HaloPSA Resources
+
 Halo lists each section of their site as a resource. Each resource spawns from the object `HaloResource` in [halo_properties](halo_api/halo_properties.py).
 
-### HaloResource methods
-There are a few methods that each resource inherits from `HaloResource`:
-
-#### HaloResource.get_all()
-Basic get request that returns a dictionary of available items.
-
-#### HaloResource.all
-Returns a list representation of "{id} - {lookup_value}" from HaloResource.get_all()
-
-#### HaloResource.get(pk)
+Most API calls will be inherited from this class
