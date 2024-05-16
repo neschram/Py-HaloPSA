@@ -1,0 +1,67 @@
+[project]
+name = "pyHaloPSA"
+authors = [{name = "Sandboxed Thoughts", email="info@sandboxedthoughts.com"},{name = "Nate Schram", email="nate@sandboxedthoughts.com"}]
+dynamic = ["version", "description"]
+
+
+[tool.black]
+line-length = 79
+target-version = ['py310']
+include = '\.pyi?$'
+exclude = '''
+  /(
+      \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | migrations
+    | templates
+  )/
+'''
+
+[tool.isort]
+profile="black"
+force_grid_wrap = 3
+use_parentheses = true
+combine_as_imports = true
+include_trailing_comma = true
+line_length = 80
+multi_line_output = 3
+skip = "migrations"
+default_section = "THIRDPARTY"
+import_heading_django="django"
+known_django = "django"
+import_heading_future="future"
+import_heading_stdlib="python"
+import_heading_thirdparty="3rd party"
+known_third_party = ["django_tenants", "localflavor", "phonenumber_field", "simple_history"]
+import_heading_firstparty="app"
+known_firstparty = ["core", "accounts", "facilities", "apps"]
+import_heading_localfolder="local"
+sections= [
+    "FUTURE",
+    "STDLIB",
+    "DJANGO",
+    "THIRDPARTY",
+    "FIRSTPARTY",
+    "LOCALFOLDER"
+]
+
+[tool.coverage.run]
+omit = [
+    # omit default django files
+    "manage.py",
+    "env/*",
+    "core/wsgi.py",
+    "core/asgi.py",
+    "*/migrations/*",
+]
+
+[tool.coverage.html]
+directory = "docs/coverage/"
