@@ -11,6 +11,24 @@ class HaloResource:
 
     HaloPSA defines each section of the API as a Resource.
 
+    The :class:`HaloResource` object is a base class for each API
+    resource. It sets default methods and properties that are required
+    or helpful in each of the Resource objects defined later.
+
+    Methods:
+
+        :func:`_build_params()`
+        :func:`_decode_response()`
+        :func:`_list_all()`
+        :func:`_find()`
+        :func:`_build_headers()`
+        :func:`_get_raw_data()`
+        :func:`get_all()`
+        :func:`get()`
+
+    Properties:
+
+        :func:`all`: easy way of calling :func:`_list_all()`
     """
 
     def __init__(
@@ -67,7 +85,8 @@ class HaloResource:
 
         Creates a python dictionary from the response text.
 
-        If there is an error in the call, raise a ValueError citing the stauts code and reason.
+        If there is an error in the call, raise a ValueError citing
+        the stauts code and reason.
         """
         if response.status_code == 200:  #: check for success
             return json.loads(response.text)
@@ -79,8 +98,8 @@ class HaloResource:
         List all available items
 
         Args:
-            title (str, optional): an identifying value to collect as the name of the item.
-            Defaults to "name".
+            title (str, optional): an identifying value to collect
+            as the name of the item. Defaults to "name".
 
         Returns:
             list: ["{id} - {title}" for all items]
@@ -136,7 +155,8 @@ class HaloResource:
 
         Args:
             headers (dict[str, str]): headers for the API request
-            params (dict[str, str], optional): Optional query parameters to pass. Defaults to None.
+            params (dict[str, str], optional): Optional query parameters.
+            Defaults to None.
 
         """
         if params:  #: if params exist, add them to the request
@@ -163,6 +183,10 @@ class HaloResource:
 
     @property
     def all(self):
+        """all
+
+        Get a list of all the Resource objects
+        """
         return self._list_all()
 
     def get(self, pk: int | str) -> dict[str, str]:
