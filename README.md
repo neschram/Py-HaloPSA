@@ -9,9 +9,9 @@ Python module for the HaloPSA API using Client Credentials from HaloPSA's HaloPS
 3. copy the configuration template, `.env.template` to `.env`
 4. Update the .env file with your API information created from a Client Credential API in HaloPSA
 5. launch python
-6. import the module: `from halo_api import haloPSA`
-7. If all variables in your config file (`.env`) are correct, you will have authenticated on import.
-8. Check by calling `haloPSA.logged_in`
+6. From here you can choose to load an available resource, `from halo_api import Clients`
+or
+import the base resource `from halo_api.base import HaloResource`
 
 > [!Important]
 > Resources will send a get request to load the respective data on import at this time.
