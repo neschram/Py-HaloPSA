@@ -1,8 +1,8 @@
 [project]
 name = "pyHaloPSA"
-version = 0.0.0
+version = "0.0.0"
 authors = [{name = "Nate Schram", email="nate@sandboxedthoughts.com"}]
-description = Connect to the HaloPSA API in Python
+description = "Connect to the HaloPSA API in Python"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
