@@ -24,7 +24,8 @@ class GET:
 
         Creates a python dictionary from the response text.
 
-        If there is an error in the call, raise a ValueError citing the stauts code and reason.
+        If there is an error in the call,
+        raise a ValueError citing the stauts code and reason.
         """
         if response.status_code == 200:  #: check for success
             return json.loads(response.text)
