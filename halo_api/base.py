@@ -1,6 +1,5 @@
-import json
+import requests
 from datetime import datetime, timedelta
-from requests import request
 from .settings import (
     AUTH_URL,
     RESOURCE_SERVER,
@@ -11,67 +10,130 @@ from .settings import (
     CONTENT_TYPE,
     SCOPE,
 )
-from .halo_properties import Client, Agent, Ticket
 
 
-class HaloApi:
-    """HaloAip
+class GET:
+    page: str = None
+    list_value: str = None
+    params: dict[str, str] = None
+    headers: dict[str, str] = None
 
-    Manages the API call to HaloPSA
+    def __init__(self, page, list_value, params, headers) -> None:
+        self.page = page
+        self.list_value = list_value
+        self.params = params
+        self.headers = headers
 
-    Raises:
-        ValueError: login response errored
+    def all(self):
+        return requests.get(url=self.page, headers=self.headers).json()[
+            self.list_value
+        ]
+
+    def get(self, pk) -> dict:
+        return requests.get(
+            url=f"{self.page}/{pk}", headers=self.headers
+        ).json()
+
+
+class HaloAuth:
+    """HaloAuth
+
+    Authentication object for the HaloPSA API
+
+    Properties:
+        headers (dict[str, str]): Http request headers
+        auth_params (dict[str, str]): Http query parameters
+        logged_in (bool): signifies that HaloAuth has authenticated
     """
 
-    _tenant: str = TENANT
+    _auth_params: dict[str, str] = {
+        "grant_type": GRANT_TYPE,
+        "scope": SCOPE,
+        "tenant": TENANT,
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+    }
     _auth_url: str = AUTH_URL
-    _action_url: str = RESOURCE_SERVER
-    _client: str = CLIENT_ID
-    _secret: str = CLIENT_SECRET
-    _grant_type: str = GRANT_TYPE
-    _scope: str = SCOPE
-    _content_type: str = CONTENT_TYPE
-    _auth_header: str = f"Bearer {_secret}"
+    _content_header: dict = {"Content-Type": CONTENT_TYPE}
+    _headers: dict[str, str] = _content_header.copy()
+    _logged_in: bool = False
+    _expire_on: datetime = None
 
-    def _authenticate(self):
+    @property
+    def headers(self) -> dict[str, str]:
+        return self._headers
+
+    @headers.setter
+    def headers(self, header: dict[str, str]) -> None:
+        self._headers.update(header)
+
+    @headers.deleter
+    def headers(self) -> None:
+        self._headers = self._content_header.copy()
+
+    @property
+    def auth_params(self) -> dict[str, str]:
+        return self._auth_params
+
+    @auth_params.setter
+    def auth_params(self, param: dict[str, str]) -> None:
+        self._auth_params.update(param)
+
+    @auth_params.deleter
+    def auth_params(self) -> None:
+        self._auth_params: dict[str, str] = {
+            "grant_type": GRANT_TYPE,
+            "scope": SCOPE,
+            "tenant": TENANT,
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
+        }
+
+    @property
+    def expire_on(self) -> datetime:
+        return self._expire_on
+
+    @expire_on.setter
+    def expire_on(self, expiration: datetime) -> None:
+        self._expire_on = expiration
+
+    @expire_on.deleter
+    def expire_on(self) -> None:
+        self._expire_on = datetime.now() - timedelta(days=1)
+
+    @property
+    def logged_in(self) -> bool:
+        return self._logged_in
+
+    @logged_in.setter
+    def logged_in(self, val: bool) -> None:
+        self._logged_in = val
+
+    def _authenticate(self) -> None | str:
         """authenticate
 
         authentication request to HaloPSA
         """
-        payload_data: list[str] = [
-            f"grant_type={self.grant_type}",
-            f"scope={self.scope}",
-            f"tenant={self.tenant}",
-            f"client_id={self.client}",
-            f"client_secret={self.secret}",
-        ]  #: request data
+        params: dict[str, str] = self._auth_params
+        headers: dict[str, str] = self.headers
 
-        headers: dict = {
-            "Content-Type": self.content_type,
-            "Authorization": self.auth_header,
-        }  #: request headers
-
-        payload = "&".join(payload_data)  #: login does not support json
-
-        response = request(
-            "POST",
-            self.auth_url,
-            headers=headers,
-            data=payload,
+        response = requests.post(
+            url=self._auth_url, headers=headers, data=params
         )  #: collect the response data from authentication
 
         if response.status_code == 200:  #: login successful
-            data = json.loads(response.text)
-            self.token: str = data["access_token"]
-            self.token_type: str = data["token_type"]
-            self.token_header: str = f"{self.token_type} {self.token}"
+            data = response.json()
+            self.headers = headers
+            self.headers["Authorization"] = (
+                f"{data['token_type']} {data['access_token']}"
+            )
             self.expire_on = datetime.now() + timedelta(
                 seconds=data["expires_in"]
             )
             self.logged_in: bool = True
 
         else:  #: return the response error
-            self.msg = f"{response.status_code}: {response.reason}"
+            return f"{response.status_code}: {response.reason}"
 
     def _is_expired(self) -> bool:
         """_is_expired
@@ -84,64 +146,104 @@ class HaloApi:
         # check the expire date is later than now
         return datetime.now() > self.expire_on
 
-    def __init__(
-        self,
-        tenant: str = _tenant,
-        auth_url: str = _auth_url,
-        action_url: str = _action_url,
-        client: str = _client,
-        secret: str = _secret,
-        grant_type: str = _grant_type,
-        scope: str = _scope,
-        content_type: str = _content_type,
-        auth_header: str = _auth_header,
-    ):
-        """__init__
+    def __init__(self, **extra):
+        if extra:
+            for k, v in extra.items():
+                setattr(self, k, v)
+        self.expire_on = datetime.now() - timedelta(days=1)
 
-        Initialize the call manager
-
-        Args:
-            auth_url (str, optional): HaloPSA authentication url.
-            Defaults to _auth_url.
-            action_url (str, optional): HaloPSA resource server url.
-            Defaults to _action_url.
-            client (str, optional): API Client ID. Defaults to _client.
-            secret (str, optional): API Client Secret. Defaults to _secret.
-            grant_type (str, optional): API parameter "grant_type".
-            Defaults to _grant_type.
-            scope (str, optional): API parameter "scope". Defaults to _scope.
-            content_type (str, optional): API Header "Content-Type".
-            Defaults to _content_type.
-            auth_header (str, optional): API Header "Authorization".
-            Defaults to _auth_header.
-        """
-        self.tenant = tenant
-        self.auth_url = auth_url
-        self.action_url = action_url
-        self.client = client
-        self.secret = secret
-        self.grant_type = grant_type
-        self.scope = scope
-        self.content_type = content_type
-        self.auth_header = auth_header
-        self.logged_in = False
-        self._authenticate()
-
-    def check_status(self):
+    def connect(self):
         if (self.logged_in is False) or self._is_expired():
             self._authenticate()
 
-    @property
-    def clients(self) -> dict[str, str]:
-        self.check_status()
-        return Client(token=self.token_header)
+
+class HaloResource(HaloAuth):
+    _action_url: str = RESOURCE_SERVER
+    _params: dict[str, str] = dict()
+    _page_name: str = None
+    _list_value: str = None
+    _OBJECTS: dict[int, "ResourceItem"] = None
+
+    class ResourceItem:
+
+        _item_fields: list = []
+
+        def __init__(self, data: dict):
+            self._item_fields = []
+            for k, v in data.items():
+                if k not in self.fields:
+                    self.fields = k
+                setattr(self, k, v or "None")
+
+        def get(self, item):
+            if item in self._item_fields:
+                return getattr(self, item)
+
+        @property
+        def fields(self) -> list:
+            return self._item_fields
+
+        @fields.setter
+        def fields(self, item) -> None:
+            self._item_fields.append(item)
+
+        def __str__(self) -> str:
+            if "name" in self.fields:
+                return f"{self.id}: {self.name}"
+            return f"{self.id}"
 
     @property
-    def agents(self) -> dict[str, str]:
-        self.check_status()
-        return Agent(token=self.token_header)
+    def action_url(self) -> str:
+        return self._action_url
 
     @property
-    def tickets(self) -> dict[str, str]:
-        self.check_status()
-        return Ticket(token=self.token_header)
+    def params(self) -> dict[str, str]:
+        return self._params
+
+    @params.setter
+    def params(self, param: dict[str, str]) -> None:
+        self._params.update(param)
+
+    @params.deleter
+    def params(self) -> None:
+        self.params: dict[str, str] = {}
+
+    @property
+    def page_name(self) -> str:
+        return self._page_name
+
+    @page_name.setter
+    def page_name(self, page: str) -> None:
+        self._page_name = page
+
+    @property
+    def list_value(self) -> str:
+        return self._list_value
+
+    @list_value.setter
+    def list_value(self, val: str) -> None:
+        self._list_value = val
+
+    @property
+    def page_link(self) -> str:
+        return f"{self.action_url}/{self.page_name}"
+
+    def _build(self):
+        self.connect()
+        data = GET(
+            self.page_link, self.list_value, self.params, self.headers
+        ).all()
+        for obj in data:
+            item = self.ResourceItem(obj)
+            self._OBJECTS.update({item.id: item})
+
+    def __init__(self, **extra):
+        super().__init__(**extra)
+        self._OBJECTS = {}
+        self._build()
+
+    def list_all(self):
+        return [str(v) for v in self._OBJECTS.values()]
+
+    def get(self, pk: int):
+        return self._OBJECTS[pk]
