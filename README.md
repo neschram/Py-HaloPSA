@@ -13,12 +13,6 @@ Python module for the HaloPSA API using Client Credentials from HaloPSA's HaloPS
 7. If all variables in your config file (`.env`) are correct, you will have authenticated on import.
 8. Check by calling `haloPSA.logged_in`
 
-## haloPSA
-
-The main object of the module. All calls to the API will stem from this. Remeber that haloPSA will attempt to authenticate on import.
-
-## HaloPSA Resources
-
-Halo lists each section of their site as a resource. Each resource spawns from the object `HaloResource` in [halo_properties](halo_api/halo_properties.py).
-
-Most API calls will be inherited from this class
+> [!Important]
+> Resources will send a get request to load the respective data on import at this time.
+> I plan to reduce this to a switch on init later, but for now, it makes my testing easier.
