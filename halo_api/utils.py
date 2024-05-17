@@ -19,7 +19,7 @@ class GET:
                 self._params[k] = v
 
     @staticmethod
-    def _decode_response(response):
+    def _decode_response(response: requests) -> dict:
         """_decode_response
 
         Creates a python dictionary from the response text.
@@ -81,4 +81,9 @@ class GET:
     ) -> dict[str, str]:
         return self._decode_response(
             self._raw_data(extra_headers=extra_headers, query=query)
+        )
+
+    def get(self, pk: int, params: dict = None, headers: dict = None) -> dict:
+        return self._decode_response(
+            self._raw_data(pk=pk, extra_headers=headers, query=params)
         )
