@@ -13,26 +13,80 @@ from .settings import (
 
 
 class GET:
+    """Performs the task of sending an API GET Request
+    to HaloPSA's API interface.
+
+    Fields:
+        page (str): the url of the API request page
+        list_value (str): name of the field storing data in the response
+        params (dict[str, str]): query parameters to pass in the request
+        headers (dict[str, str]): http headers to pass in the request
+
+    Methods:
+        :func:`all()`: query the Resource for all instances
+        :func:`get(pk: int)`: query the Resource for a single instance
+        from the supplied instance id (`pk`)
+    """
+
     page: str = None
     list_value: str = None
     params: dict[str, str] = None
     headers: dict[str, str] = None
 
     def __init__(self, page, list_value, params, headers) -> None:
+        """GET
+
+        Performs the task of sending an API GET Request
+        to HaloPSA's API interface.
+
+        Methods:
+            :func:`all()`: query the Resource for all instances
+            :func:`get()`: query the Resource for a single instance
+
+            Args:
+                page (_type_): url of the API request page
+                list_value (_type_): name of the content field in the response
+                params (_type_): query parameters to pass in the request
+                headers (_type_): http headers to pass in the request
+        """
         self.page = page
         self.list_value = list_value
         self.params = params
         self.headers = headers
 
-    def all(self):
+    def _all(self):
+        """all
+
+        Query the Resource for data on all instances available
+        """
         return requests.get(url=self.page, headers=self.headers).json()[
             self.list_value
         ]
 
-    def get(self, pk) -> dict:
+    def _get_by_id(self, pk: int) -> dict:
+        """get
+
+        Query the Resource for data on a single instance by its id
+        """
         return requests.get(
             url=f"{self.page}/{pk}", headers=self.headers
         ).json()
+
+    def get(self, items: list[int] | int = None) -> dict:
+        """get
+
+        Request one or more Resource instances.
+
+        Args:
+            items (list[int] | int, optional): one or more id's for the lookup.
+            Defaults to None.
+        """
+        if items is not None:
+            if type(items) is int:
+                return {items: self._get_by_id(items)}
+            if type(items) is list:
+                return {i: self._get_by_id(i) for i in items}
+        return self._all()
 
 
 class HaloAuth:
@@ -44,6 +98,11 @@ class HaloAuth:
         headers (dict[str, str]): Http request headers
         auth_params (dict[str, str]): Http query parameters
         logged_in (bool): signifies that HaloAuth has authenticated
+
+    Methods:
+        :func:`_authenticate()`: authenticate and set an access token
+        :func:`_is_expired()`: verify if authentication is active
+        :func:`connect()`: authenticate only if not active
     """
 
     _auth_params: dict[str, str] = {
@@ -155,8 +214,8 @@ class HaloAuth:
         """connect
 
         Checks to determine if the API is authenticated.
-        If not, it calls self._authenticate() to retrieve an active
-        connection to the api endpoint.
+        If not, it calls :func:`self._authenticate()` to retrieve an active
+        connection to the API endpoint.
         """
         if (self.logged_in is False) or self._is_expired():
             self._authenticate()
@@ -168,6 +227,7 @@ class HaloResource(HaloAuth):
     _page_name: str = None
     _list_value: str = None
     _OBJECTS: dict[int, "ResourceItem"] = None
+    GET: "GET" = None
 
     class ResourceItem:
 
@@ -250,6 +310,12 @@ class HaloResource(HaloAuth):
     def __init__(self, build_on_init: bool = False, **extra):
         super().__init__(**extra)
         self._OBJECTS = {}
+        self.GET = GET(
+            page=self.page_link,
+            list_value=self.list_value,
+            params=self.params,
+            headers=self.headers,
+        )
         if build_on_init:
             self._build()
 
