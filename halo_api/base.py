@@ -48,7 +48,6 @@ class HaloAuth:
 
     _auth_params: dict[str, str] = {
         "grant_type": GRANT_TYPE,
-        "scope": SCOPE,
         "tenant": TENANT,
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
@@ -153,13 +152,19 @@ class HaloAuth:
         self.expire_on = datetime.now() - timedelta(days=1)
 
     def connect(self):
+        """connect
+
+        Checks to determine if the API is authenticated.
+        If not, it calls self._authenticate() to retrieve an active
+        connection to the api endpoint.
+        """
         if (self.logged_in is False) or self._is_expired():
             self._authenticate()
 
 
 class HaloResource(HaloAuth):
     _action_url: str = RESOURCE_SERVER
-    _params: dict[str, str] = dict()
+    _params: dict[str, str] = {"pageinate": False}
     _page_name: str = None
     _list_value: str = None
     _OBJECTS: dict[int, "ResourceItem"] = None
@@ -229,21 +234,24 @@ class HaloResource(HaloAuth):
         return f"{self.action_url}/{self.page_name}"
 
     def _build(self):
+        """_build
+
+        Authenticate to the API endpoint, then build out a list of
+        available objects.
+        """
         self.connect()
         data = GET(
             self.page_link, self.list_value, self.params, self.headers
         ).all()
-        for obj in data:
+        for obj in iter(data):
             item = self.ResourceItem(obj)
             self._OBJECTS.update({item.id: item})
 
-    def __init__(self, **extra):
+    def __init__(self, build_on_init: bool = False, **extra):
         super().__init__(**extra)
         self._OBJECTS = {}
-        self._build()
+        if build_on_init:
+            self._build()
 
     def list_all(self):
         return [str(v) for v in self._OBJECTS.values()]
-
-    def get(self, pk: int):
-        return self._OBJECTS[pk]
