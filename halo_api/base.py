@@ -112,12 +112,15 @@ class Get:
 class HaloAuth:
     """HaloAuth
 
-    Authentication object for the HaloPSA API
+    Authentication object for the HaloPSA API as defined by
+    https://haloservicedesk.com/apidoc/authentication/client
 
     Properties:
-        headers (dict[str, str]): Http request headers
+        auth_headers (dict[str, str]): Authentication request headers
+        headers (dict[str, str]): Query request headres
         auth_params (dict[str, str]): Http query parameters
-        logged_in (bool): signifies that HaloAuth has authenticated
+        expire_on (str): Expiration date of an auth token
+        logged_in (bool): Signifies that HaloAuth has an active auth token
 
     Methods:
         :func:`_authenticate()`: authenticate and set an access token
@@ -132,33 +135,84 @@ class HaloAuth:
         "client_secret": CLIENT_SECRET,
     }
     _auth_url: str = AUTH_URL
-    _content_header: dict = {"Content-Type": CONTENT_TYPE}
+    _content_header: dict[str, str] = {"Content-Type": CONTENT_TYPE}
+    _auth_headers: dict[str, str] = _content_header.copy()
     _headers: dict[str, str] = _content_header.copy()
     _logged_in: bool = False
     _expire_on: datetime = None
 
     @property
+    def auth_headers(self) -> dict[str, str]:
+        """auth_headers
+
+        Request headers to pass when authenticating the API
+        """
+        return self._auth_headers
+
+    @auth_headers.setter
+    def auth_headers(self, header: dict[str, str]) -> None:
+        """auth_headers.setter
+
+        Update `self._auth_headers` with the supplied `header` information
+        """
+        self._auth_headers.update(header)
+
+    @auth_headers.deleter
+    def auth_headers(self) -> None:
+        """auth_headers.deleter
+
+        Return `self._auth_headers` to its original state
+        """
+        self._auth_headers = self._content_header.copy()
+
+    @property
     def headers(self) -> dict[str, str]:
+        """headers
+
+        Request headers for an API call
+        """
         return self._headers
 
     @headers.setter
     def headers(self, header: dict[str, str]) -> None:
+        """headers.setter
+
+        Update the request headers with the provided `header`.
+        """
+
         self._headers.update(header)
 
-    @headers.deleter
-    def headers(self) -> None:
-        self._headers = self._content_header.copy()
+    def delete_header(self, header: dict[str, str]) -> None:
+        """delete_header
+
+        Remove a header from the request headers.
+        """
+        if header in self.headers:
+            del self._headers[header]
 
     @property
     def auth_params(self) -> dict[str, str]:
+        """auth_params
+
+        POST request query parameters for the authentication
+        request.
+        """
         return self._auth_params
 
     @auth_params.setter
     def auth_params(self, param: dict[str, str]) -> None:
+        """auth_params.setter
+
+        Add or update the authentication request parameter, `param`.
+        """
         self._auth_params.update(param)
 
     @auth_params.deleter
     def auth_params(self) -> None:
+        """auth_params.deleter
+
+        Resets the authentication request parameters to their default state.
+        """
         self._auth_params: dict[str, str] = {
             "grant_type": GRANT_TYPE,
             "scope": SCOPE,
@@ -169,23 +223,78 @@ class HaloAuth:
 
     @property
     def expire_on(self) -> datetime:
+        """expire_on
+
+        The datetime value for when the authentication token
+        will expire.
+        """
         return self._expire_on
 
     @expire_on.setter
     def expire_on(self, expiration: datetime) -> None:
+        """expire_on.setter
+
+        Set the datetime value of the authentication token's
+        expiration.
+        """
         self._expire_on = expiration
 
     @expire_on.deleter
     def expire_on(self) -> None:
-        self._expire_on = datetime.now() - timedelta(days=1)
+        """expire_on.deleter
+
+        Sets the expiration date to a time in the past.
+        """
+        self._expire_on = datetime(2000, 1, 1, 0, 0, 0)
 
     @property
     def logged_in(self) -> bool:
+        """logged_in
+
+        Expresses the validity of the current authentication state.
+
+        Returns:
+            bool: If authentication is valid (`True`) or not (`False`)
+        """
         return self._logged_in
 
     @logged_in.setter
     def logged_in(self, val: bool) -> None:
+        """logged_in.setter
+
+        Sets the value of `self._logged_in` to `val`.
+        """
         self._logged_in = val
+
+    @logged_in.deleter
+    def logged_in(self) -> None:
+        """logged_in.deleter
+
+        Do not delete the variable, instead set it to `False`.
+        """
+        self.logged_in = False
+
+    def __init__(self, **extra):
+        """HaloAuth
+
+        Authentication object for the HaloPSA API
+
+        Properties:
+            auth_headers (dict[str, str]): Authentication request headers
+            headers (dict[str, str]): Query request headres
+            auth_params (dict[str, str]): Http query parameters
+            expire_on (str): Expiration date of an auth token
+            logged_in (bool): Signifies that HaloAuth has an active auth token
+
+        Methods:
+            :func:`_authenticate()`: authenticate and set an access token
+            :func:`_is_expired()`: verify if authentication is active
+            :func:`connect()`: authenticate only if not active
+        """
+        if extra:
+            for k, v in extra.items():
+                setattr(self, k, v)
+        self.expire_on = datetime(2000, 1, 1, 0, 0, 0)
 
     def _authenticate(self) -> None | str:
         """authenticate
@@ -193,7 +302,7 @@ class HaloAuth:
         authentication request to HaloPSA
         """
         params: dict[str, str] = self._auth_params
-        headers: dict[str, str] = self.headers
+        headers: dict[str, str] = self.auth_headers
 
         response = requests.post(
             url=self._auth_url, headers=headers, data=params
@@ -223,12 +332,6 @@ class HaloAuth:
             return True
         # check the expire date is later than now
         return datetime.now() > self.expire_on
-
-    def __init__(self, **extra):
-        if extra:
-            for k, v in extra.items():
-                setattr(self, k, v)
-        self.expire_on = datetime.now() - timedelta(days=1)
 
     def connect(self):
         """connect
@@ -304,11 +407,67 @@ class ResourceItem:
 
 
 class HaloResource(HaloAuth):
+    """HaloResource
+
+    An API endpoint or "Resource" as defined by the HaloPSA API:
+    https://haloservicedesk.com/apidoc/resources
+
+    Properties:
+        _action_url (str): The base url of the Resource's API endpoint.
+        Defaults to `RESOURCE_SERVER`.
+        _params (dict[str, str]): Query parameters for the API call.
+        Defaults to `{"pageinate": False}`.
+        _page_name (str): The Resource's api page.
+        Defaults to `None`.
+        _list_value (str): The value of the response context that
+        contains Resource instance data. Defaults to `None`.
+        _OBJECT_CLASS (ResourceItem): The class name of Resource instances.
+        Defaults to `None`.
+        _OBJECTS (dict[int, "ResourceItem"]): A dictionary of
+        Resource instances. Defaults to `None`.
+
+    """
+
     _action_url: str = RESOURCE_SERVER
     _params: dict[str, str] = {"pageinate": False}
     _page_name: str = None
     _list_value: str = None
+    _OBJECT_CLASS: ResourceItem = None
     _OBJECTS: dict[int, "ResourceItem"] = None
+
+    def __init__(
+        self,
+        object_class: "ResourceItem",
+        build_on_init: bool = False,
+        **extra,
+    ):
+        """HaloResource
+
+        An API endpoint or "Resource" as defined by the HaloPSA API:
+        https://haloservicedesk.com/apidoc/resources
+
+        Args:
+            `object_class` (ResourceItem): The class name of
+            Resource instances.
+            `build_on_init` (bool, optional): calls `self._build()` on instance
+            initialization if `True`. Defaults to `False`.
+        """
+        # Initialize the parent class
+        super().__init__(**extra)
+        # Assign self.object_class
+        self._OBJECT_TYPE = object_class
+        # Assign an empty dictionary to self._OBJECTS
+        self._OBJECTS: dict[int, "ResourceItem"] = dict()
+        # Set the get request class instance
+        self.GET = Get(
+            page=self.page_link,
+            list_value=self.list_value,
+            params=self.params,
+            headers=self.headers,
+        )
+        # Call the first GET request if build_on_init is True
+        if build_on_init:
+            self._build()
 
     @property
     def action_url(self) -> str:
@@ -400,26 +559,6 @@ class HaloResource(HaloAuth):
         for obj in iter(data):
             item = ResourceItem(obj)
             self._OBJECTS.update({item.id: item})
-
-    def __init__(self, build_on_init: bool = False, **extra):
-        """HaloResource
-
-        An API endpoint or "Resource" as defined by the HaloPSA API
-
-        Args:
-            `build_on_init` (bool, optional): calls `self._build()` on instance
-            initialization if `True`. Defaults to `False`.
-        """
-        super().__init__(**extra)
-        self._OBJECTS = {}
-        self.GET = Get(
-            page=self.page_link,
-            list_value=self.list_value,
-            params=self.params,
-            headers=self.headers,
-        )
-        if build_on_init:
-            self._build()
 
     def list_all(self) -> list[str]:
         """list_all
