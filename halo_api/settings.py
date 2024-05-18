@@ -1,3 +1,4 @@
+# 3rd party
 from decouple import config
 
 BASE_URL: str = config("BASE_URL")
