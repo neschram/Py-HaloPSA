@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 # 3rd party
 import requests
 
-# local
-from .settings import (
+# Py-HaloPSA
+from halo_api.config.settings import (
     AUTH_URL,
     CLIENT_ID,
     CLIENT_SECRET,

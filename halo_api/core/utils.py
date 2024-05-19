@@ -1,6 +1,8 @@
-# halo_api/utils.py
-from halo_api.settings import CONTENT_TYPE
+# 3rd party
 import requests
+
+# Py-HaloPSA
+from halo_api.config.settings import CONTENT_TYPE
 
 
 def default_headers(**kwargs) -> dict[str, str]:
@@ -12,7 +14,7 @@ def default_headers(**kwargs) -> dict[str, str]:
     Returns:
         dict[str,str]: request header data
     """
-    return {"Content-Type": CONTENT_TYPE}
+    return {"Content-Type": CONTENT_TYPE}.update(kwargs)
 
 
 def default_parameters(**kwargs) -> dict[str, str]:
@@ -23,7 +25,7 @@ def default_parameters(**kwargs) -> dict[str, str]:
     Returns:
         dict[str, str]: query parameter request data
     """
-    return {"pageinate": False}
+    return {}.update(kwargs)
 
 
 class Get:

@@ -59,8 +59,10 @@ default_section = "THIRDPARTY"
 import_heading_future="future"
 import_heading_stdlib="python"
 import_heading_thirdparty="3rd party"
-known_third_party = ["requests","python-decouple"]
+known_thirdparty = ["requests","python-decouple"]
 import_heading_localfolder="local"
+import_heading_firstparty="Py-HaloPSA"
+known_firstparty = ["halo_api"]
 sections= [
     "FUTURE",
     "STDLIB",
