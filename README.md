@@ -2,6 +2,15 @@
 
 Python module for the HaloPSA API using Client Credentials from HaloPSA's HaloPSA API integration item.
 
+## Documentation
+
+Build the documentation locally using sphinx:
+
+1. Enable your environment
+2. Move into the `docs` directory
+3. Build the docs `./make html`
+4. Navigate to `path/to/docs/build/html/index.html` in your web browser
+
 ## Quick-Start
 
 ### Clone the repository and set up the environment
