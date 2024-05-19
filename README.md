@@ -4,15 +4,31 @@ Python module for the HaloPSA API using Client Credentials from HaloPSA's HaloPS
 
 ## Quick-Start
 
-1. [recommended] create and activate your environment: `python -m vnev env && . env/bin/activate`
-2. install requirements: `python -m pip install -r requirements.txt`
-3. copy the configuration template, `.env.template` to `.env`
-4. Update the .env file with your API information created from a Client Credential API in HaloPSA
-5. launch python
-6. From here you can choose to load an available resource, `from halo_api import Clients`
-or
-import the base resource `from halo_api.base import HaloResource`
+### Clone the repository and set up the environment
 
-> [!Important]
-> Resources will send a get request to load the respective data on import at this time.
-> I plan to reduce this to a switch on init later, but for now, it makes my testing easier.
+#### Environment Setup
+
+1. `git clone git@github.com:neschram/Py-HaloPSA.git`
+2. `cd Py-HaloPSA`
+3. `python -m venv env`
+4. `. env/bin/actinvate` or `.\env\Scripts\activate`
+5. `python -m pip install -r requirements.txt`
+
+#### Config file Setup
+
+1. `cp .env.template .env`
+2. Open the `.env` file and update it with your API information
+
+### Import the API module into your project
+
+1. `from halo_api import halo`
+
+#### Authenticate the api
+
+1. `halo.connect()`
+
+#### Interact with resources
+
+1. `clients = halo.Clients`
+2. `clients._get_all()`
+3. `clients.INSTANCES`
