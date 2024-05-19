@@ -1,8 +1,7 @@
 # Py-HaloPSA
-from halo_api.core.resources import Resource, ResourceInstance as Instance
-from halo_api.core.utils import default_headers, default_parameters
+from halo_api.resources.base import BaseResource, ResourceInstance as Instance
+from halo_api.core.utils import default_parameters
 
-_DEFAULT_HEADERS = default_headers
 _DEFAULT_PARAMS = default_parameters
 
 
@@ -12,58 +11,56 @@ class ClientInstance(Instance):
     Attributes:
         INSTANCE_NAME (str): "Client"
         INSTANCE_FIELD_NAMES (list[str]): ["id", "name", "colour"]
+
     """
 
     INSTANCE_NAME: str = "Client"
     INSTANCE_FIELD_NAMES: list[str] = ["id", "name", "colour"]
 
 
-class ClientResource(Resource):
-    """ClientResource
+class ClientResource(BaseResource):
+    """class ClientResource
 
-    Endpoint for Halo Client records.
+    Endpoint for HaloPSA Client (Customer) records.
     https://haloacademy.halopsa.com/apidoc/resources/clients
 
+    Prarmeters:
+    -----------
+
+        INSTANCE_CLASS (Instance):
+            :class:`ClientInstance`
+        RESOURCE_NAME (str):
+            Client
+        RESOURCE_DATA_GROUP (str):
+            clients
+        RESOURCE_PARAMS (dict[str, any]):
+            Get parameters as noted in :ref:`Client Query (GET) Parameters`
 
     Client Query (GET) Parameters:
+    ------------------------------
 
-        PAGINATE (bool): Whether to use Pagination in the response.
-        Defaults to False.
-        COUNT (int): When not using pagination, the number of results to
-        return. Defaults to 1500.
-        ORDER (str): The name of the field to order by.
-        Defaults to "id".
-        INCLUDE_INACTIVE (bool): Include inactive Customers in the response.
-        Defaults to True.
-        INCLUDE_ACTIVE (bool): Include active Customers in the response.
-        Defaults to True.
-        ORDER_DESC (bool): Whether to order ascending or descending.
-        Defaults to False.
-        PAGE_SIZE (int): When using Pagination, the size of the page.
-        Defaults to None.
-        PAGE_NO (int): When using Pagination, the page number to return.
-        Defaults to None.
-        SEARCH (str): Filter by Customers like your search string.
-        Defaults to None.
+        PAGINATE (bool):
+            Whether to use Pagination in the response. Defaults to False.
+        COUNT (int):
+            When not using pagination, the number of results to return.
+            Defaults to 1500.
+        ORDER (str):
+            The name of the field to order by. Defaults to "id".
+        INCLUDE_INACTIVE (bool):
+            Include inactive Customers in the response. Defaults to True.
+        INCLUDE_ACTIVE (bool):
+            Include active Customers in the response. Defaults to True.
+        ORDER_DESC (bool):
+            Whether to order ascending or descending. Defaults to False.
+        PAGE_SIZE (int):
+            When using Pagination, the size of the page. Defaults to None.
+        PAGE_NO (int):
+            When using Pagination, the page number to return. Defaults to None.
+        SEARCH (str):
+            Filter by Customers like your search string. Defaults to None.
         TOP_LEVEL_ID (int): None
 
-    Attributes:
 
-        INSTANCE_CLASS (Instance): ClientInstance
-        RESOURCE_NAME (str): Client
-        RESOURCE_DATA_GROUP (str): clients
-        RESOURCE_PARAMS (dict[str, any]) : {
-            paginate (bool): PAGINATE
-            count (int): COUNT
-            order (str): "ORDER
-            includeinactive (bool): INCLUDE_INACTIVE
-            includeactive (bool): INCLUDE_ACTIVE
-            orderdesc (bool): ORDER_DESC
-            page_size (int): PAGE_SIZE
-            page_no (int): PAGE_NO
-            search (str): SEARCH
-            toplevel_id (int): TOP_LEVEL_ID
-        }
     """
 
     # Clients get parameters

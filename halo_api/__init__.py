@@ -1,5 +1,13 @@
-# from .base import HaloResource
+from halo_api.core.auth import HaloAuth
+from halo_api.resources import Resource
 
-# Clients = HaloResource(page_name="Client", list_value="clients")
 
-# Tickets = HaloResource(page_name="Tickets", list_value="tickets")
+class HaloPSA(HaloAuth):
+
+    def __init__(self, connect_on_init: bool = False, **extra):
+        super().__init__(**extra)
+        if connect_on_init:
+            self.connect()
+
+    def __call__(self, resource: str) -> Resource:
+        return getattr(Resource, resource)

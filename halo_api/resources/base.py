@@ -1,3 +1,8 @@
+"""resources.base
+
+Base Resouce objects used for each HaloPSA API Resource.
+"""
+
 # Py-HaloPSA
 from halo_api.config.settings import RESOURCE_SERVER
 from halo_api.core.utils import Get, default_headers, default_parameters
@@ -12,15 +17,16 @@ class ResourceInstance:
     An object returned by  `Resource.get_all()`
 
     Attributes:
-        `INSTANCE_ID_FIELD` (str): Field name of the instance's
+
+        INSTANCE_ID_FIELD (str): Field name of the instance's
         identifying integer. Defaults to `id`.
-        `INSTANCE_TITLE_FIELD` (str): Field name of the instance's
+        INSTANCE_TITLE_FIELD (str): Field name of the instance's
         identifying text. Defaults to `"name"`.
-        `INSTANCE_FIELD_NAMES` (list[str]): Data field names for the instance.
+        INSTANCE_FIELD_NAMES (list[str]): Data field names for the instance.
         Defaults to an empty list (`[]`).
-        `INSTANCE_HEADERS` (dict[str, str]): Instance request headers.
+        INSTANCE_HEADERS (dict[str, str]): Instance request headers.
         Defaults to `_DEFAULT_HEADERS()`.
-        `INSTANCE_GET_PARAMS` (dict[str, str]): Query parameters for the
+        INSTANCE_GET_PARAMS (dict[str, str]): Query parameters for the
         instance's GET request. Defaults to `_DEFAULT_PARAMETERS()`.
 
     """
@@ -50,7 +56,9 @@ class ResourceInstance:
         Available update fields for POST calls to the Resource instance.
 
         Returns:
+
             dict[str, str]: instance fields and their values.
+
         """
         return {field: self.get(field) for field in self.INSTANCE_FIELD_NAMES}
 
@@ -62,7 +70,9 @@ class ResourceInstance:
         field names and their values.
 
         Args:
+
             params (dict[str, str]): update fields
+
         """
         self._post_params.update(params)
 
@@ -98,25 +108,29 @@ class ResourceInstance:
         return f"{self.__class__.__name__} #{self._pk}: {self._title}"
 
 
-class Resource:
+class BaseResource:
     """Resource
 
     An API endpoint or "Resource" as defined by the HaloPSA API:
     https://haloservicedesk.com/apidoc/resources
 
     Attributes:
-        `RESOURCE_NAME` (str): The name of the API Resource
-        `RESOURCE_DATA_GROUP` (str): The group containing resource data in
-        response content.
-        `RESOURCE_LIST_PAGE` (str): The API endpoint name
-        `RESOURCE_GET_PARAMS` (dict[str, str]): Default get request parameters
-        `RESOURCE_POST_PARAMS` (dict[str, str]): Default post request parameters
-        `RESOURCE_HEADERS` (dict[str, str]): Default request headers
-        `INSTANCE_CLASS` (object): The class name for Resource instances
+
+        RESOURCE_NAME (str): The name of the API Resource
+        RESOURCE_DATA_GROUP (str): The group containing resource data in
+            response content.
+        RESOURCE_LIST_PAGE (str): The API endpoint name
+        RESOURCE_GET_PARAMS (dict[str, str]): Default get request parameters
+        RESOURCE_POST_PARAMS (dict[str, str]): Default post request
+            parameters
+        RESOURCE_HEADERS (dict[str, str]): Default request headers
+        INSTANCE_CLASS (object): The class name for Resource instances
 
     METHODS:
-        :func:`get_all(self)` -> dict[int, "Resource"]: return all instances
-        :func:`get(self, pk: int)` -> dict[int, "Resource"]: return a single instance
+
+        get_all(self) -> dict[int, "Resource"]: return all instances
+        get(self, pk: int) -> dict[int, "Resource"]: return a single instance
+
     """
 
     RESOURCE_NAME: str = "Resource"
@@ -127,8 +141,10 @@ class Resource:
     INSTANCE_CLASS: "ResourceInstance" = ResourceInstance
     INSTANCES: dict[int, "ResourceInstance"] = {}
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+    def __init__(self, **kwargs):
+        if kwargs:
+            for k, v in kwargs.items():
+                self.__setattr__(k, v)
 
     @property
     def name(self) -> str:
@@ -165,27 +181,27 @@ class Resource:
         headers=headers,
     )
 
-    def _get_all(self) -> dict[int, "Resource"]:
+    def _get_all(self) -> dict[int, "BaseResource"]:
         """_get_all
 
-        Get all Resource instances.
+        Get all BaseResource instances.
         """
         data: dict = self._GET.get()
         for instance in data:
             self._build_instance(instance, add=True)
 
-    def _get(self, pk: int) -> dict[int, "Resource"]:
+    def _get(self, pk: int) -> dict[int, "BaseResource"]:
         """_get
 
-        Get a single Resource instance.
+        Get a single BaseResource instance.
         """
         instance = self._GET.get(items=pk)
         self.add_instance(instance)
 
-    def get(self, pk: int, update: bool = False) -> dict[int, "Resource"]:
+    def get(self, pk: int, update: bool = False) -> dict[int, "BaseResource"]:
         """_get
 
-        Get a single Resource instance.
+        Get a single BaseResource instance.
         """
         if update:
             return self._get(pk=pk)

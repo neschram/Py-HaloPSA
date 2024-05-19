@@ -6,16 +6,17 @@ from datetime import datetime, timedelta
 # 3rd party
 import requests
 
-# local
-from .settings import (
+from halo_api.core.utils import default_headers
+from halo_api.config.settings import (
     AUTH_URL,
     CLIENT_ID,
     CLIENT_SECRET,
-    CONTENT_TYPE,
     GRANT_TYPE,
     SCOPE,
     TENANT,
 )
+
+_DEFAULT_HEADERS = default_headers
 
 
 class HaloAuth:
@@ -25,11 +26,11 @@ class HaloAuth:
     https://haloservicedesk.com/apidoc/authentication/client
 
     Properties:
-        auth_headers (dict[str, str]): Authentication request headers
-        headers (dict[str, str]): Query request headres
-        auth_params (dict[str, str]): Http query parameters
-        expire_on (str): Expiration date of an auth token
-        logged_in (bool): Signifies that HaloAuth has an active auth token
+        `auth_headers` (dict[str, str]): Authentication request headers
+        `headers` (dict[str, str]): Query request headres
+        `auth_params` (dict[str, str]): Http query parameters
+        `expire_on` (str): Expiration date of an auth token
+        `logged_in` (bool): Signifies that HaloAuth has an active auth token
 
     Methods:
         :func:`_authenticate()`: authenticate and set an access token
@@ -44,9 +45,8 @@ class HaloAuth:
         "client_secret": CLIENT_SECRET,
     }
     _auth_url: str = AUTH_URL
-    _content_header: dict[str, str] = {"Content-Type": CONTENT_TYPE}
-    _auth_headers: dict[str, str] = _content_header.copy()
-    _headers: dict[str, str] = _content_header.copy()
+    _auth_headers: dict[str, str] = _DEFAULT_HEADERS()
+    _headers: dict[str, str] = _DEFAULT_HEADERS()
     _logged_in: bool = False
     _expire_on: datetime = None
 
@@ -72,7 +72,7 @@ class HaloAuth:
 
         Return `self._auth_headers` to its original state
         """
-        self._auth_headers = self._content_header.copy()
+        self._auth_headers = _DEFAULT_HEADERS().copy()
 
     @property
     def headers(self) -> dict[str, str]:
