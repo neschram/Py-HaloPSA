@@ -9,6 +9,7 @@ class ClientInstance(Instance):
     """ClientInstance
 
     Attributes:
+
         INSTANCE_NAME (str): "Client"
         INSTANCE_FIELD_NAMES (list[str]): ["id", "name", "colour"]
 
@@ -59,7 +60,7 @@ class ClientResource(BaseResource):
         SEARCH (str):
             Filter by Customers like your search string. Defaults to None.
         TOP_LEVEL_ID (int): None
-
+            "Top level ID for query filtering"
 
     """
 

@@ -40,8 +40,8 @@ Computed Settings Values:
 # 3rd party
 from decouple import config
 
-AUTH_URL: str = f"{config("BASE_URL")}/{config('AUTH_PAGE')}"
-RESOURCE_SERVER: str = f"{config("BASE_URL")}/{config('ACTION_PAGE')}"
+AUTH_URL: str = f"{config('BASE_URL')}/{config('AUTH_PAGE')}"
+RESOURCE_SERVER: str = f"{config('BASE_URL')}/{config('ACTION_PAGE')}"
 TENANT: str = config("TENANT")
 CLIENT_ID: str = config("CLIENT_ID")
 CLIENT_SECRET: str = config("CLIENT_SECRET")

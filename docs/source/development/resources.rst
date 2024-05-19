@@ -20,11 +20,8 @@ The Base Resource
 ^^^^^^^^^^^^^^^^^
 
 .. automodule:: halo_api.resources.base.BaseResource
-
-    .. autoclass:: halo_api.resources.base.BaseResource
-        :no-index:
-        :members:
-        :undoc-members:
+    :members:
+    :undoc-members:
 
 A Resource Instance
 """""""""""""""""""

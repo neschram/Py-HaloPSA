@@ -11,6 +11,7 @@ Welcome to Py-HaloPSA's documentation!
    :caption: Contents:
 
    development/index
+   user-guide/index
 
 
 Indices and tables

@@ -11,3 +11,5 @@ class HaloPSA(HaloAuth):
 
     def __call__(self, resource: str) -> Resource:
         return getattr(Resource, resource)
+
+halo: HaloPSA = HaloPSA()

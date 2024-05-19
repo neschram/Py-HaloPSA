@@ -189,6 +189,7 @@ class BaseResource:
         data: dict = self._GET.get()
         for instance in data:
             self._build_instance(instance, add=True)
+        return self.INSTANCES
 
     def _get(self, pk: int) -> dict[int, "BaseResource"]:
         """_get
