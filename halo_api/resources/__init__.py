@@ -6,7 +6,7 @@ HaloPSA API documentation:
 
     https://haloservicedesk.com/apidoc/resources
 
-Each module consists of a separate Resource each containing an instance of:
+Each module consists of a separate Resource containing an instance of:
 
     :class:`halo_api.resources.base.BaseResource`
     and
@@ -15,10 +15,45 @@ Each module consists of a separate Resource each containing an instance of:
 Creating a Resource
 -------------------
 
-New Resources should be created in their own self_titled file.
-Once finished, import the module and add it to `RESOURCE_LIST`.
+Resource Location
+^^^^^^^^^^^^^^^^^
 
-Example Resource::
+New Resources should be created in their own self_titled file.
+
+    For example, the Client resource lives at `halo_api/resources/clients.py`.
+
+Resource Class
+^^^^^^^^^^^^^^
+
+The Resource should subclass
+    :class:`halo_api.resources.base.BaseResource`.
+
+Resource Instances should  subclass
+    :class:`halo_api.resources.base.ResourceInstance`.
+
+Take the clients resource module for example::
+
+    # halo_psa/resources/clients.py
+
+    from halo_api.resources.base import BaseResource, ResourceInstance
+
+    class ClientInstance(ResourceInstance):
+        INSTANCE_NAME: str = "Client"
+        INSTANCE_FIELD_NAMES: list[str] = ["id", "name", "colour"]
+
+    class ClientResource(BaseResource):
+        ...
+        INSTANCE_CLASS: Instance = ClientInstance
+
+Adding the Resource
+-------------------
+
+Once finished, import the module into `halo_api/resources/__init__.py`
+and add it to `RESOURCE_LIST`.
+
+Again, let's reference the clients module::
+
+    # halo_psa/resources/__init__.py
 
     from .clients import ClientResource
     ...

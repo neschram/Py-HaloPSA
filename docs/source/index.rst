@@ -10,8 +10,8 @@ Welcome to Py-HaloPSA's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   development/index
    user-guide/index
+   development/index
 
 
 Indices and tables

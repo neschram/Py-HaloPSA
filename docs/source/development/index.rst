@@ -10,3 +10,6 @@ interested in how to use the API module.
 
     core
     resources
+    Resource
+    base-resource
+    clientresource
