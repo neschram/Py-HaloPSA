@@ -73,7 +73,7 @@ from .clients import ClientResource
 
 RESOURCE_LIST: list[BaseResource] = [
     ClientResource,
-]
+]  #: HaloPSA API Resources for the Resource class.
 
 
 # -- Resource -----
@@ -123,7 +123,7 @@ class Resource:
             <class: halo_api.resources.clients.ClientResource>
 
         """
-        return self.RESOURCES[resource]
+        return getattr(self, resource)()
 
     # Assign the return string for the Resource class
     def __str__(self) -> str:
@@ -137,29 +137,9 @@ class Resource:
     def __repr__(self) -> str:
         return f"HaloPSA.Resource(resource_list={self.resource_list})"
 
-    # Assign the getattr method to return a Resource object
-    def __getattribute__(self, name: str) -> BaseResource:
-        """__getattribute__
-
-        Defines the `getattr` method for the class.
-        When calling `getattr(Resource, name)` check `self.RESOURCES.keys()`
-        for the value `name`. If found, return it's corresponding
-        `Resource` object.
-
-        Args:
-            name (str): The requested API Resource
-
-        Raises:
-            KeyError: Resource not found
-
-        Returns:
-            object: an instance of `BaseResource`
-            available in `RESOURCE_LIST`.
-        """
-        try:
-            return self.RESOURCES[name]
-        except KeyError:
-            raise KeyError(f"{name} not in {self.RESOURCES.keys()}")
-
     def __init__(self) -> None:
-        pass
+        for resource in RESOURCE_LIST:
+            setattr(self, resource.RESOURCE_NAME, resource)
+
+    def list_resources(self):
+        return [r.RESOURCE_NAME for r in RESOURCE_LIST]

@@ -6,10 +6,7 @@ interested in how to use the API module.
 
 .. toctree::
     :maxdepth: 1
-    :caption: Modules
+    :caption: Contents
 
     core
     resources
-    Resource
-    base-resource
-    clientresource

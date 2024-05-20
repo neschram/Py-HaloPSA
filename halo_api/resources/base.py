@@ -1,11 +1,27 @@
 """resources.base
 
 Base Resouce objects used for each HaloPSA API Resource.
+
+To add a resource create a new file, ``{resource_name}.py``.
+In the file create a resource instance subclassing ``ResourceInstance``,
+then create the resource by subclassing ``BaseResource``.
+
+Be sure to include your instance class in your resource class::
+
+    >>> class ExampleInstance(ResourceInstance):
+    >>>     pass
+
+    >>> class ExampleResource(BaseResource):
+    >>>     ...
+    >>>     INSTANCE_CLASS: "ResourceInstance" = ExampleInstance
+    >>>     ...
+
 """
 
 # Py-HaloPSA
 from halo_api.config.settings import RESOURCE_SERVER
 from halo_api.core.utils import Get, default_headers, default_parameters
+from halo_api.core.auth import HaloAuth
 
 _DEFAULT_HEADERS: dict[str, str] = default_headers
 _DEFAULT_PARAMETERS: dict[str, str] = default_parameters
@@ -99,7 +115,7 @@ class ResourceInstance:
         return f"{self.__class__.__name__} #{self._pk}: {self._title}"
 
 
-class BaseResource:
+class BaseResource(HaloAuth):
     """Resource
 
     An API endpoint or "Resource" as defined by the HaloPSA API:
@@ -126,10 +142,25 @@ class BaseResource:
     INSTANCES: dict[int, "ResourceInstance"] = {}
     """A dictionary of created ``ResourceInstance`` objects"""
 
-    def __init__(self, **kwargs):
-        if kwargs:
-            for k, v in kwargs.items():
-                self.__setattr__(k, v)
+    def __init__(
+        self,
+        RESOURCE_NAME=RESOURCE_NAME,
+        RESOURCE_DATA_GROUP=RESOURCE_DATA_GROUP,
+        RESOURCE_LIST_PAGE=RESOURCE_LIST_PAGE,
+        RESOURCE_PARAMS=RESOURCE_PARAMS,
+        RESOURCE_HEADERS=RESOURCE_HEADERS,
+        INSTANCE_CLASS=INSTANCE_CLASS,
+        INSTANCES=INSTANCES,
+        **kwargs,
+    ):
+        self.RESOURCE_NAME = RESOURCE_NAME
+        self.RESOURCE_DATA_GROUP = RESOURCE_DATA_GROUP
+        self.RESOURCE_LIST_PAGE = RESOURCE_LIST_PAGE
+        self.RESOURCE_PARAMS = RESOURCE_PARAMS
+        self.RESOURCE_HEADERS = RESOURCE_HEADERS
+        self.INSTANCE_CLASS = INSTANCE_CLASS
+        self.INSTANCES = INSTANCES
+        super().__init__(**kwargs)
 
     @property
     def name(self) -> str:
@@ -138,7 +169,7 @@ class BaseResource:
         The Resource's identifying name
 
         Returns:
-            str: `self.RESOURCE_NAME
+            str: `self.RESOURCE_NAME`
         """
         return self.RESOURCE_NAME
 
@@ -147,6 +178,9 @@ class BaseResource:
         """data_group
 
         The response container that house's desired content data
+
+        Returns:
+            str: `self.RESOURCE_DATA_GROUP`
         """
         return self.RESOURCE_DATA_GROUP
 
@@ -157,16 +191,34 @@ class BaseResource:
         The full web url of the Resource's API page
 
         Returns:
-            str: f"{RESOURCE_SERVER}/{self.RESOURCE_LIST_PAGE}"
+            str: `f"{RESOURCE_SERVER}/{self.RESOURCE_LIST_PAGE}"`
         """
-        f"{RESOURCE_SERVER}/{self.RESOURCE_LIST_PAGE}"
+        return f"{RESOURCE_SERVER}/{self.RESOURCE_LIST_PAGE}"
 
     @property
     def params(self) -> dict[str, str]:
+        """params
+
+        Request parameters
+
+        Returns:
+            dict[str, str]: `self.RESOURCE_PARAMS`
+        """
         return self.RESOURCE_PARAMS
 
     @params.setter
     def params(self, data: dict[str, str]) -> None:
+        """params.setter
+
+        Instead of overwriting all of the params, update
+        ``self.RESOURCE_PARAMS`` with the supplied ``data`` dictionary.
+
+        Args:
+            data (dict[str, str]): Updated parameters
+
+        Returns:
+            None
+        """
         self.RESOURCE_PARAMS.update(data)
 
     @property
@@ -189,7 +241,9 @@ class BaseResource:
 
         Get all BaseResource instances.
         """
-        data: dict = self._GET.get()
+        data: dict = Get(
+            self.list_url, self.data_group, self.params, self.headers
+        ).get()
         for instance in data:
             self._build_instance(instance, add=True)
         return self.INSTANCES
@@ -199,7 +253,9 @@ class BaseResource:
 
         Get a single BaseResource instance.
         """
-        instance = self._GET.get(items=pk)
+        instance = Get(
+            self.list_url, self.data_group, self.params, self.headers
+        ).get(items=pk)
         self.add_instance(instance)
 
     def get(self, pk: int, update: bool = False) -> dict[int, "BaseResource"]:

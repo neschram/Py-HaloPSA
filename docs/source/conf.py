@@ -12,7 +12,7 @@ import halo_api
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project: str = "Py-HaloPSA"
+project: str = "HaloPSA API (in Python)"
 copyright: str = "2024, Nathaniel Schram"
 author: str = "Nathaniel Schram"
 release: str = "0.0.0.0"
@@ -37,8 +37,7 @@ exclude_patterns: list[str] = []
 
 
 html_theme: str = "sphinx_rtd_theme"
-html_static_path: list[str] = ["_static"]
-
+html_title: str = "Py-HaloPSA"
 
 # -- Napoleon Settings -------------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
@@ -49,11 +48,11 @@ napoleon_numpy_docstring: bool = True
 napoleon_include_init_with_doc: bool = True
 napoleon_include_private_with_doc: bool = False
 napoleon_include_special_with_doc: bool = False
-napoleon_use_admonition_for_examples: bool = False
-napoleon_use_admonition_for_notes: bool = False
-napoleon_use_admonition_for_references: bool = False
+napoleon_use_admonition_for_examples: bool = True
+napoleon_use_admonition_for_notes: bool = True
+napoleon_use_admonition_for_references: bool = True
 napoleon_use_ivar: bool = False
-napoleon_use_param: bool = False
+napoleon_use_param: bool = True
 napoleon_use_rtype: bool = False
 napoleon_preprocess_types: bool = True
 napoleon_type_aliases: bool = None
@@ -68,5 +67,7 @@ python_maximum_signature_line_length = 80
 
 # -- autodoc Options
 # https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#configuration
-autoclass_content = "both"
+
 autodoc_inherit_docstrings = True
+autodoc_member_order = "bysource"
+autoclass_content = "class"

@@ -14,7 +14,9 @@ def default_headers(**kwargs) -> dict[str, str]:
     Returns:
         dict[str,str]: request header data
     """
-    return {"Content-Type": CONTENT_TYPE}.update(kwargs)
+    headers: dict[str, str] = {"Content-Type": CONTENT_TYPE}
+    headers.update(kwargs)
+    return headers
 
 
 def default_parameters(**kwargs) -> dict[str, str]:
@@ -29,53 +31,38 @@ def default_parameters(**kwargs) -> dict[str, str]:
 
 
 class Get:
-    """Performs the task of sending an API GET Request
+    """Get
+
+    Performs the task of sending an API GET Request
     to HaloPSA's API interface.
-
-    Fields:
-        page (str): the url of the API request page
-        list_value (str): name of the field storing data in the response
-        params (dict[str, str]): query parameters to pass in the request
-        headers (dict[str, str]): http headers to pass in the request
-
-    Methods:
-        :func:`_all()`: query the Resource for all instances
-        :func:`_get_by_id(pk: int)`: query the Resource for a single instance
-        from the supplied instance id (`pk`)
-        :func:`get(pk: list[int] | int)`: returns a dictionary of items
-        returned by a GET request to the API endpoint
     """
 
-    _page: str = None
-    _list_value: str = None
-    _params: dict[str, str] = None
-    _headers: dict[str, str] = None
+    PAGE: str = None
+    """API request page"""
+    LIST_VALUE: str = None
+    """name of the field storing data in the response"""
+    PARAMS: dict[str, str] = None
+    """query parameters to pass in the request"""
+    HEADERS: dict[str, str] = None
+    """http headers to pass in the request"""
 
     def __init__(
         self,
-        page: str = _page,
-        list_value: str = _list_value,
-        params: dict[str, str] = _params,
-        headers: dict[str, str] = _headers,
+        page: str = PAGE,
+        list_value: str = LIST_VALUE,
+        params: dict[str, str] = PARAMS,
+        headers: dict[str, str] = HEADERS,
     ) -> None:
-        """GET
+        """__init__
 
-        Performs the task of sending an API GET Request
-        to HaloPSA's API interface.
+        Initialize the Get object.
 
         Args:
-            page (_type_): url of the API request page
-            list_value (_type_): name of the content field in the response
-            params (_type_): query parameters to pass in the request
-            headers (_type_): http headers to pass in the request
+            page (str): url of the API request page
+            list_value (str): name of the content field in the response
+            params (dict[str, any]): query parameters to pass in the request
+            headers (dict[str, any]): http headers to pass in the request
 
-
-        Methods:
-            :func:`_all()`: query the Resource for all instances
-            :func:`_get_by_id(pk: int)`: query the Resource for
-            a single instance from the supplied instance id (`pk`)
-            :func:`get(pk: list[int] | int)`: returns a dictionary of
-            items returned by a GET request to the API endpoint
         """
         self.page = page
         self.list_value = list_value
@@ -83,18 +70,28 @@ class Get:
         self.headers = headers
 
     def _all(self):
-        """all
+        """_all
 
         Query the Resource for data on all instances available
+
+        Returns:
+            dict [str, str]: a request response json dict filtered
+            to the content container.
         """
         return requests.get(
             url=self.page, headers=self.headers, data=self.params
         ).json()[self.list_value]
 
-    def _get_by_id(self, pk: int) -> dict:
-        """get
+    def _get_by_id(self, pk: int) -> dict[str, str]:
+        """_get_by_id
 
-        Query the Resource for data on a single instance by its id
+        Query the Resource for data on a single instance by its id.
+
+        Args:
+            pk (int): the desired instance's id
+
+        Returns:
+            dict[str, str]: instance data
         """
         return requests.get(
             url=f"{self.page}/{pk}", headers=self.headers, data=self.params
