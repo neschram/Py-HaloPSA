@@ -5,7 +5,8 @@ import requests
 
 
 # Py-HaloPSA
-from config import settings
+from halo_psa.config import settings
+from halo_psa.utils import BaseData
 
 _AUTH_URL = settings.AUTH_URL
 _CLIENT_ID = settings.CLIENT_ID
@@ -109,12 +110,10 @@ class HaloAuth:
 
         if response.status_code == 200:  #: login successful
             data = response.json()
-            self._query_headers["Authorization"] = (
-                f"{data['token_type']} {data['access_token']}"
-            )
-            self.expire_on = datetime.now() + timedelta(
-                seconds=data["expires_in"]
-            )
+            self.query_headers = {
+                "Authorization": f"{data['token_type']} {data['access_token']}",
+            }
+            self.expire_on = datetime.now() + timedelta(seconds=data["expires_in"])
             self.logged_in: bool = True
 
         else:  #: return the response error
@@ -206,7 +205,7 @@ class HaloAuth:
 
         Add or update the authentication request parameter, `param`.
         """
-        for k, v in params.items():
+        for k, v in params:
             self._auth_params.add(k, v)
 
     @auth_params.deleter

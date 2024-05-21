@@ -1,4 +1,9 @@
-# utils/__init__.py
+"""
+Utils
+#####
+
+Utility methods and objects used in the HaloPSA API module.
+"""
 
 
 class BaseData:
@@ -14,7 +19,7 @@ class BaseData:
 
     Using HaloPSA's required content header::
 
-        >>> from utils import BaseData
+        >>> from halo_psa.utils import BaseData
         >>> content_type = {
         >>>    "Content-Type":
         >>>    "application/x-www-form-urlencoded",
@@ -37,7 +42,9 @@ class BaseData:
 
         Add data as an instance attribute if provided.
         Otherwise, initialize the object with ``data`` set to an empty dict.
+
         """
+
         data: dict[str, any] = data or dict()
         data.update(kwargs)
         self.data_list: list[str] = []
@@ -53,6 +60,7 @@ class BaseData:
 
         Example::
 
+            >>> from halo_psa.utils import BaseData
             >>> content_type = BaseData(
             >>>     {"Content-Type": "application/x-www-form-urlencoded"}
             >>> )
