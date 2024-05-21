@@ -1,4 +1,8 @@
-"""halo_api/settings.py
+# halo_api/settings.py
+
+"""
+Config.Settings
+===============
 
 Default settings for the Py-HaloPSA project.
 
@@ -7,6 +11,7 @@ Use a configuration file (`.env`) or environment variables
 to store the following settings:
 
 Configuration Settings:
+-----------------------
 
     BASE_URL (str): The base path to your API.
     Do not add a trailing slash ("/").
@@ -29,6 +34,7 @@ Configuration Settings:
     Defaults to "client_credentials".
 
 Computed Settings Values:
+-------------------------
 
     AUTH_URL (str): a full url pointing to the
     API's authentication path.
