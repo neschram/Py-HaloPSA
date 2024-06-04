@@ -1,4 +1,3 @@
-import requests
 from halo_psa.config.settings import RESOURCE_SERVER
 from .base_resource import BaseResource
 
