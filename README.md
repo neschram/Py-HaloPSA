@@ -31,4 +31,5 @@ No docs yet.
 
 1. `clients = HaloPSA.get("clients")`
 2. `agents = HaloPSA.get("agents")`
-3. `HaloPSA.lookup("agents", 4)`
+3. `HaloPSA.lookup("agents", "Jane")`
+4. `HaloPSA.lookup("clients", "Sandboxed Thoughts")`
