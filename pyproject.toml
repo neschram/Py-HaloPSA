@@ -32,13 +32,16 @@ target-version = ['py312']
 include = '\.pyi?$'
 exclude = '''
   /(
-      \.eggs
+    | \.eggs
     | \.git
     | \.hg
     | \.mypy_cache
     | \.tox
     | \.venv
-    | \env
+    | env/
+    | venv/
+    | \.venv
+    | \.env
     | _build
     | buck-out
     | build
@@ -46,7 +49,7 @@ exclude = '''
     | migrations
     | templates
     | source
-  )/
+  )\
 '''
 
 [tool.isort]

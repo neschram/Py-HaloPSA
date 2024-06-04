@@ -1,7 +1,5 @@
 import requests
 from halo_psa.config import settings
-from halo_psa.auth import HaloAuth
-from halo_psa.utils import BaseData
 
 RESOURCE_URL: str = settings.RESOURCE_SERVER
 
@@ -61,9 +59,28 @@ class BaseResource:
     @property
     def list_url(self) -> str:
         """The full API endpoint url for the resource"""
-        return f"{RESOURCE_URL}/{self.page}"
+        return f"{self.page}"
 
     @property
     def data_group(self) -> str:
         """Response container with list data."""
         return self._data_group
+
+    def get(
+        self,
+        auth: dict[str, str],
+        headers: dict[str, str] = None,
+        params: dict[str, str] = None,
+        pk: int = None,
+    ):
+        get_link: str = self.list_url
+        heads: dict[str, str] = auth
+        if headers:
+            heads.update(headers)
+        if pk is not None:
+            get_link += f"/{pk}"
+        if self.data_group is not None:
+            return requests.get(
+                url=get_link, headers=heads, params=params
+            ).json()[self.data_group]
+        return requests.get(url=get_link, headers=heads, params=params).json()

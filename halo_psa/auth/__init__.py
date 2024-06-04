@@ -13,7 +13,6 @@ _CLIENT_ID = settings.CLIENT_ID
 _CLIENT_SECRET = settings.CLIENT_SECRET
 _CONTENT_TYPE = settings.CONTENT_TYPE
 _GRANT_TYPE = settings.GRANT_TYPE
-_RESOURCE_SERVER = settings.RESOURCE_SERVER
 _SCOPE = settings.SCOPE
 _TENANT = settings.TENANT
 
@@ -113,7 +112,9 @@ class HaloAuth:
             self.query_headers = {
                 "Authorization": f"{data['token_type']} {data['access_token']}",
             }
-            self.expire_on = datetime.now() + timedelta(seconds=data["expires_in"])
+            self.expire_on = datetime.now() + timedelta(
+                seconds=data["expires_in"]
+            )
             self.logged_in: bool = True
 
         else:  #: return the response error
