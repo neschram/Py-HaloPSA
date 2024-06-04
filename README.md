@@ -4,13 +4,6 @@ Python module for the HaloPSA API using Client Credentials from HaloPSA's HaloPS
 
 ## Documentation
 
-Build the documentation locally using sphinx:
-
-1. Enable your environment
-2. Move into the `docs` directory
-3. Build the docs `./make html`
-4. Navigate to `path/to/docs/build/html/index.html` in your web browser
-
 ## Quick-Start
 
 ### Clone the repository and set up the environment
@@ -30,14 +23,10 @@ Build the documentation locally using sphinx:
 
 ### Import the API module into your project
 
-1. `from halo_api import halo`
-
-#### Authenticate the api
-
-1. `halo.connect()`
+1. `from halo_api import HaloPSA`
 
 #### Interact with resources
 
-1. `clients = halo.Clients`
-2. `clients._get_all()`
-3. `clients.INSTANCES`
+1. `clients = HaloPSA.get("clients")`
+2. `agents = HaloPSA.get("agents")`
+3. `HaloPSA.lookup("agents", 4)`
