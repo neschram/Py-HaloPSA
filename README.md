@@ -4,6 +4,8 @@ Python module for the HaloPSA API using Client Credentials from HaloPSA's HaloPS
 
 ## Documentation
 
+No docs yet.
+
 ## Quick-Start
 
 ### Clone the repository and set up the environment
