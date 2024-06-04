@@ -21,7 +21,7 @@ Python module for the HaloPSA API using Client Credentials from HaloPSA's HaloPS
 1. `cp .env.template .env`
 2. Open the `.env` file and update it with your API information
 
-### Import the API module into your project
+#### Import the API module into your project
 
 1. `from halo_api import HaloPSA`
 
