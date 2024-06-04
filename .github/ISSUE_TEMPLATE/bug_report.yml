@@ -9,7 +9,7 @@ body:
   - type: markdown
     attributes:
       value: |
-      # Thanks!
+      \# Thanks!
       
       We know that submitting a bug report can be time-consuming and sometimes results in frustration.
       Every issue reported allows us to evaluate our project, ensuring that we are able to provide the best possible
