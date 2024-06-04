@@ -1,4 +1,3 @@
-import requests
 from halo_psa.auth import HaloAuth as Auth
 from halo_psa.resources import Clients, Agents
 
@@ -7,7 +6,6 @@ class Halo:
     _auth = Auth()
     _clients = Clients()
     _agents = Agents()
-
     _RESOURCES: list[str] = [
         "clients",
         "agents",
@@ -38,6 +36,13 @@ class Halo:
         """
         return self._RESOURCES
 
+    def connect(self):
+        self._auth.connect()
+
+    def get_credentials(self) -> dict[str, str]:
+        self.connect()
+        return self._auth.query_headers
+
     def get(
         self,
         resource: str,
@@ -62,8 +67,7 @@ class Halo:
             dict | list: Response data.
         """
         r = self.get_resource(resource)
-        self._auth.connect()
-        auth = self._auth.query_headers
+        auth = self.get_credentials()
         return r.get(auth=auth, headers=headers, params=params, pk=pk)
 
     def lookup(self, resource: str, value: str) -> list[dict[str, any]]:
