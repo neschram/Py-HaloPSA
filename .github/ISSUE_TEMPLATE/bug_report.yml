@@ -28,6 +28,11 @@ body:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automattically formatted into code, so no need for backticks.
       render: shell
+  - type: textarea
+    id: replication
+    attributes:
+      label: Steps to reproduce the issue
+      description: With as much detail as possible, please submit steps to reproduce the issue described above.
   - type: checkboxes
     id: terms
     attributes:
