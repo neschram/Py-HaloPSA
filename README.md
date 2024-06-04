@@ -29,7 +29,7 @@ No docs yet.
 
 #### Interact with resources
 
-1. `clients = HaloPSA.get("clients")`
-2. `agents = HaloPSA.get("agents")`
-3. `HaloPSA.lookup("agents", "Jane")`
-4. `HaloPSA.lookup("clients", "Sandboxed Thoughts")`
+- `clients = HaloPSA.get("clients")`
+- `agents = HaloPSA.get("agents")`
+- `HaloPSA.lookup("agents", "Jane")`
+- `HaloPSA.lookup("clients", "Sandboxed Thoughts")`
