@@ -2,19 +2,20 @@ from halo_psa.config.settings import RESOURCE_SERVER
 from .base_resource import BaseResource
 
 
-class ClientsResource(BaseResource):
+class SuppliersResource(BaseResource):
     """
-    ClientsResource
-    ===============
+    SuppliersResource
+    =================
 
-    Returns an object containing the count of Clients, and an array of Client
-    objects.
-    https://haloacademy.halopsa.com/apidoc/resources/clients
+    Returns an object containing the count of Suppliers,
+    and an array of Supplier objects.
+
+    https://haloacademy.halopsa.com/apidoc/resources/suppliers
 
     Attributes:
 
-        RESOURCE_PAGE (str): Client
-        RESOURCE_DATA (str): clients
+        RESOURCE_PAGE (str): Supplier
+        RESOURCE_DATA (str): suppliers
 
     List Params:
 
@@ -24,21 +25,20 @@ class ClientsResource(BaseResource):
         order (str): ID
         orderdesc (bool): False
         search (str): None
+        count (int): 5000
         toplevel_id (int): None
         includeinactive (bool): True
         includeactive (bool): True
-        count (int): 5000
 
     Lookup Params:
 
         includedetails (bool): True
-        includeactivity (bool): False
 
     """
 
     # Resource Attributes
-    RESOURCE_PAGE: str = "Client"
-    RESOURCE_DATA: str = "clients"
+    RESOURCE_PAGE: str = "Supplier"
+    RESOURCE_DATA: str = "suppliers"
 
     # Default List Params
     PAGENATE: bool = False
@@ -53,20 +53,18 @@ class ClientsResource(BaseResource):
     """Whether to order ascending or descending"""
     SEARCH: str = None
     """Filter by Customers like your search string"""
+    COUNT: int = 5000
+    """When not using pagination, the number of results to return"""
     TOPLEVEL_ID: int = None
     """Filter by Customers belonging to a particular top level"""
     INCLUDE_INACTIVE: bool = True
     """Include inactive Customers in the response"""
     INCLUDE_ACTIVE: bool = True
     """Include active Customers in the response"""
-    COUNT: int = 5000
-    """When not using pagination, the number of results to return"""
 
     # Default Lookup Params (RESOURCE_PAGE/ID)
     INCLUDE_DETAILS: bool = True
     """Whether to include extra objects in the response"""
-    INCLUDE_ACTIVITY: bool = False
-    """Whether to include customer ticket activity in the response"""
 
     LIST_PARAMS: dict[str, str] = {
         "pageinate": PAGENATE,
@@ -75,10 +73,10 @@ class ClientsResource(BaseResource):
         "order": ORDER,
         "orderdesc": ORDER_DESC,
         "search": SEARCH,
+        "count": COUNT,
         "toplevel_id": TOPLEVEL_ID,
         "includeinactive": INCLUDE_INACTIVE,
         "includeactive": INCLUDE_ACTIVE,
-        "count": COUNT,
     }
 
     def __init__(

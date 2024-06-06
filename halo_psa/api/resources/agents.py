@@ -2,10 +2,10 @@ from halo_psa.config.settings import RESOURCE_SERVER
 from .base_resource import BaseResource
 
 
-class Agents(BaseResource):
+class AgentsResource(BaseResource):
     """
-    Agents
-    ======
+    AgentsResource
+    ==============
 
     Returns an object containing the count of Agents, and an array of Agent
     objects.

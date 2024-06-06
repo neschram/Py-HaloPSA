@@ -2,10 +2,10 @@ from halo_psa.config.settings import RESOURCE_SERVER
 from .base_resource import BaseResource
 
 
-class Assets(BaseResource):
+class AssetsResource(BaseResource):
     """
-    Assets
-    =======
+    AssetsResource
+    ==============
 
     Returns an object containing the count of Assets, and an array of Asset
     objects.

@@ -1,5 +1,5 @@
 from halo_psa.auth import HaloAuth as Auth
-from .halo_resources import Clients, Agents, Assets, Suppliers
+from .resources import Clients, Agents, Assets, Suppliers
 
 
 class HaloAPI:
