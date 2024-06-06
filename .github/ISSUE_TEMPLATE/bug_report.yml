@@ -8,13 +8,12 @@ assignees:
 body:
   - type: markdown
     attributes:
-      label: Thanks!
       value: |        
-        We know that submitting a bug report can be time-consuming and sometimes results in frustration.
+        Thanks!
+        We know that submitting a bug report can be time-consuming and may even result in frustration.
         
-        Every issue reported allows us to evaluate our project ensuring that we are able to provide the best intentional experience.
+        Every issue reported allows us to evaluate our project to ensure that we provide the best intentional experience.
         ;p
-
   - type: input
     id: contact
     attributes:
