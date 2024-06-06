@@ -25,9 +25,12 @@ class BaseResource:
 
     """
 
-    RESOURCE_PAGE: str = None
-    RESOURCE_DATA: str = None
-    LIST_PARAMS: dict[str, any] = None
+    RESOURCE_PAGE: str = ...
+    """Page  name for the resource"""
+    RESOURCE_DATA: str = ...
+    """name of the response container with resource items"""
+    LIST_PARAMS: dict[str, any] = ...
+    """parameters for listing all resource items"""
 
     def __init__(
         self,

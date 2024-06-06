@@ -1,4 +1,4 @@
-from .api import Halo
+from .api import HaloAPI
 
 
-HaloPSA = Halo()
+Halo = HaloAPI()
