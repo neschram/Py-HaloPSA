@@ -2,7 +2,7 @@ from halo_psa.auth import HaloAuth as Auth
 from .halo_resources import Clients, Agents, Assets, Suppliers
 
 
-class Halo:
+class HaloAPI:
     _auth = Auth()
     _clients = Clients()
     _agents = Agents()
@@ -89,9 +89,9 @@ class Halo:
         Example::
 
             >>> halo = Halo()
-            >>> halo.lookup("agents", "Nate")
-            [{'id': 3,
-              'name': 'Nathaniel Schram',
+            >>> halo.lookup("agents", "Jack")
+            [{'id': 69,
+              'name': 'Jack Sparrow',
               ...
             }]
 
