@@ -9,11 +9,10 @@ assignees:
 body:
   - type: markdown
     attributes:
-      value: |
+      value: >
         We are happy to see enthusiastic participants request new
         features they would like to incorporate into our project.
-        However, please do not submit a feature request if you are unwilling to
-        participate in its creation.
+        However, you will be expected to create a branch and.
   - type: input
     id: contact
     attributes:
