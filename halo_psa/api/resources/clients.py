@@ -58,7 +58,7 @@ class Clients(BaseResource):
     INCLUDE_INACTIVE: bool = True
     """Include inactive Customers in the response"""
     INCLUDE_ACTIVE: bool = True
-    """Include inactive Customers in the response"""
+    """Include active Customers in the response"""
     COUNT: int = 5000
     """When not using pagination, the number of results to return"""
 

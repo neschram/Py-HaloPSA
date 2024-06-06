@@ -3,30 +3,36 @@ from .base_resource import BaseResource
 
 
 class Agents(BaseResource):
-    """Agents
+    """
+    Agents
+    ======
 
-    Endpoint for Agent accounts and their preferences and permissions.
+    Returns an object containing the count of Agents, and an array of Agent
+    objects.
+    https://haloacademy.halopsa.com/apidoc/resources/agents
 
-    List Parameters:
-        TEAM (str): Filter by Agents within a particular team
-        SEARCH (str): Filter by Agents with a name, email address or telephone
-        number
-        SECTION_ID (int): Filter by Agents within a particular team
-        DEPARTMENT_ID (int): Filter by Agents within a particular department
-        CLIENT_ID (int): Filter by Agents who have access to a particular
-        client
-        ROLE (str): Filter by Agents who have a particular role.
-        Requires an int passed as a string.
-        INCLUDE_ENABLED (bool): Include enabled Agents in the response
-        INCLUDE_DISABLED (bool): Include disabled Agents in the response
-        INCLUDE_UNASSIGNED (bool): Include the unassigned Agent in the response
-        INCLUDE_DISABLED (bool): Include disabled Agents in the response
+    Attributes:
 
-    Lookup Parameters:
-        INCLUDE_DETAILS (bool): Whether to include extra objects
-        Defaults to True.
-        INCLUDE_ACTIVITY (bool): Whether to include customer ticket activity
-        Defaults to False.
+        RESOURCE_PAGE (str): Agent
+        RESOURCE_DATA (str): None
+
+    List Params:
+
+        team (str): None
+        search (str): None
+        section_id (int): None
+        department_id (int): None
+        client_id (int): None
+        role (str): None
+        includeenabled (bool): True
+        includedisabled (bool): True
+        includeunassigned (bool): True
+        includedisabled (bool): True
+
+    Lookup Params:
+
+        includedetails (bool): True
+        include_activity (bool): False
     """
 
     # Resource Attributes
@@ -45,21 +51,19 @@ class Agents(BaseResource):
     CLIENT_ID: int = None
     """Filter by Agents who have access to a particular client"""
     ROLE: str = None
-    """Filter by Agents who have a particular role ID."""
-    INCLUDE_ENABLED: bool = None
+    """Filter by Agents who have a particular role."""
+    INCLUDE_ENABLED: bool = True
     """Include enabled Agents in the response"""
-    INCLUDE_DISABLED: bool = None
+    INCLUDE_DISABLED: bool = True
     """Include disabled Agents in the response"""
-    INCLUDE_UNASSIGNED: bool = None
+    INCLUDE_UNASSIGNED: bool = True
     """Include the unassigned Agent in the response"""
-    INCLUDE_DISABLED: bool = None
+    INCLUDE_DISABLED: bool = True
     """Include disabled Agents in the response"""
 
     # Default Lookup Params (RESOURCE_PAGE/ID)
     INCLUDE_DETAILS: bool = True
     """Whether to include extra objects in the response"""
-    INCLUDE_ACTIVITY: bool = False
-    """Whether to include customer ticket activity in the response"""
 
     LIST_PARAMS: dict[str, str] = {
         "team": TEAM,
