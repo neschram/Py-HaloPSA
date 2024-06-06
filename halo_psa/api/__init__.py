@@ -72,7 +72,12 @@ class HaloAPI:
         """
         r = self.get_resource(resource)
         auth = self.get_credentials()
-        return r.get(auth=auth, headers=headers, params=params, pk=pk)
+        return r.get(
+            auth=auth,
+            pk=pk,
+            headers=headers,
+            params=params,
+        )
 
     def lookup(self, resource: str, value: str) -> list[dict[str, any]]:
         """lookup
