@@ -1,0 +1,56 @@
+name: Feature Request
+description: Request a New Feature
+title: "[Feature Request]: "
+labels: ["ehancement"]
+projects:
+  - "neschram/Py-HaloPSA"
+assignees:
+  - "neschram"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We are happy to see enthusiastic participants request new
+        features they would like to incorporate into our project.
+        However, please do not submit a feature request if you are unwilling to
+        participate in its creation.
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you about your ideas?
+      placeholder: email@example.com
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Provide a summary of the Feature as simply as possible.
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Why
+      description: |
+        Explain the purpose of this feature and what you expect it to solve.
+  - type: textarea
+    id: concept
+    attributes:
+      label: Concept
+      description: Visualize how you would go about making this happen and why.
+  - type: checkboxes
+    id: participation
+    attributes:
+      label: Participation
+      description: |
+        By submitting this request, you agree to participate in the creation of the feature, should it be approved for implementation.
+      options:
+        - label: I agree to participate in this feature's creation if it is approved.
+          required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/neschram/Py-HaloPSA/blob/main/.github/CODE_OF_CONDUCT.md).
+      options:
+        - label: I agree to follow Py-HaloPSA's Code of Conduct.
+          required: true
+
