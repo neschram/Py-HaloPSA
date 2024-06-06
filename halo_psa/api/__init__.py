@@ -1,14 +1,18 @@
 from halo_psa.auth import HaloAuth as Auth
-from .halo_resources import Clients, Agents
+from .halo_resources import Clients, Agents, Assets, Suppliers
 
 
 class Halo:
     _auth = Auth()
     _clients = Clients()
     _agents = Agents()
+    _assets = Assets()
+    _suppliers = Suppliers()
     _RESOURCES: list[str] = [
         "clients",
         "agents",
+        "assets",
+        "suppliers",
     ]
 
     def get_resource(self, value: str) -> object:
