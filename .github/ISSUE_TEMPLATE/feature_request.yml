@@ -12,38 +12,45 @@ body:
       value: >
         We are happy to see enthusiastic participants request new
         features they would like to incorporate into our project.
-        However, you will be expected to create a branch and.
+        However, you will be expected to submit your own work towards
+        feature.
+  - type: checkboxes
+    id: participation
+    attributes:
+      label: Participation
+      options:
+        - label: I agree to help produce the code to make this feature a possibility.
+          required: true
   - type: input
     id: contact
     attributes:
       label: Contact Details
       description: How can we get in touch with you about your ideas?
       placeholder: email@example.com
+    validations:
+      required: true
   - type: textarea
     id: summary
     attributes:
       label: Summary
       description: Provide a summary of the Feature as simply as possible.
+    validations:
+      required: true
   - type: textarea
     id: purpose
     attributes:
       label: Why
       description: |
         Explain the purpose of this feature and what you expect it to solve.
+    validations:
+      required: true
   - type: textarea
     id: concept
     attributes:
       label: Concept
       description: Visualize how you would go about making this happen and why.
-  - type: checkboxes
-    id: participation
-    attributes:
-      label: Participation
-      description: |
-        By submitting this request, you agree to participate in the creation of the feature, should it be approved for implementation.
-      options:
-        - label: I agree to participate in this feature's creation if it is approved.
-          required: true
+    validations:
+      required: true
   - type: checkboxes
     id: terms
     attributes:
