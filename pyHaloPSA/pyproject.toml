@@ -6,8 +6,10 @@ description = "Connect to the HaloPSA API in Python"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-  "python-decouple",
-  "requests",
+  "requests~=2.32",
+  "python-decouple~=3.8",
+  "sphinx~=7.3",
+  "sphinx-rtd-theme~=2.0",
 ]
 classifiers = [
   "Programming Language :: Python :: 3.12",
