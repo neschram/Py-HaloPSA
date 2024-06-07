@@ -9,20 +9,56 @@ class BaseResource:
     BaseResource
     ============
 
-    BaseResource is the basic structure of a HaloPSA
-    resource object. The information available from HaloPSA can be
-    accessed at https://haloacademy.halopsa.com/apidoc/resources.
+        BaseResource is the basic structure of a HaloPSA
+        resource object. The information available from HaloPSA can be
+        accessed at https://haloacademy.halopsa.com/apidoc/resources.
 
     Class Attributes:
     -----------------
 
-    When subclassing `BaseResource` be sure to include
-    the following class attributes:
+        When subclassing `BaseResource` be sure to include
+        the following class attributes:
 
-    RESOURCE_PAGE (str): The Resource's page name
-    RESOURCE_DATA (str): Response dictionary key that contains resource
-    record data.
-    LIST_PARAMS (dict[str, any]): Query parameters for a GET request.
+        `RESOURCE_PAGE` (str): The Resource's page name
+        `RESOURCE_DATA` (str): Response dictionary key that contains resource
+        record data.
+        `LIST_PARAMS` (dict[str, any]): Query parameters for a GET request.
+
+    Example:
+    --------
+
+        >>> class SuppliersResource(BaseResource):
+        >>>     RESOURCE_PAGE: str = "Supplier"
+        >>>     RESOURCE_DATA: str = "suppliers"
+        >>>     PAGENATE: bool = False
+        >>>     PAGE_SIZE: int = 0
+        >>>     PAGE_NO: int = 0
+        >>>     ORDER: str = "ID"
+        >>>     ORDER_DESC: bool = False
+        >>>     SEARCH: str = None
+        >>>     COUNT: int = 5000
+        >>>     TOPLEVEL_ID: int = None
+        >>>     INCLUDE_INACTIVE: bool = True
+        >>>     INCLUDE_ACTIVE: bool = True
+        >>>     LIST_PARAMS: dict[str, str] = {
+        >>>        "pageinate": PAGENATE,
+        >>>        "page_size": PAGE_SIZE,
+        >>>        "page_no": PAGE_NO,
+        >>>        "order": ORDER,
+        >>>        "orderdesc": ORDER_DESC,
+        >>>        "search": SEARCH,
+        >>>        "count": COUNT,
+        >>>        "toplevel_id": TOPLEVEL_ID,
+        >>>        "includeinactive": INCLUDE_INACTIVE,
+        >>>        "includeactive": INCLUDE_ACTIVE,
+        >>>    }
+        >>>    def __init__(
+        >>>        self,
+        >>>        list_url: str = f"{RESOURCE_SERVER}/{RESOURCE_PAGE}",
+        >>>        data_group: str = RESOURCE_DATA,
+        >>>        **extra,
+        >>>    ) -> None:
+        >>>        super().__init__(list_url, data_group, **extra)
 
     """
 

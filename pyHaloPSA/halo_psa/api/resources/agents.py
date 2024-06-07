@@ -1,5 +1,5 @@
 from halo_psa.config.settings import RESOURCE_SERVER
-from .base_resource import BaseResource
+from halo_psa.api.utils import BaseResource
 
 
 class AgentsResource(BaseResource):

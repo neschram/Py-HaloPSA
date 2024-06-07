@@ -1,11 +1,3 @@
-"""
-Utils
-#####
-
-Utility methods and objects used in the HaloPSA API module.
-"""
-
-
 class BaseData:
     """
     BaseData

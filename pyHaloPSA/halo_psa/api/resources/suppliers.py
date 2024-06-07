@@ -1,5 +1,5 @@
 from halo_psa.config.settings import RESOURCE_SERVER
-from .base_resource import BaseResource
+from halo_psa.api.utils import BaseResource
 
 
 class SuppliersResource(BaseResource):
@@ -84,5 +84,5 @@ class SuppliersResource(BaseResource):
         list_url: str = f"{RESOURCE_SERVER}/{RESOURCE_PAGE}",
         data_group: str = RESOURCE_DATA,
         **extra,
-    ):
+    ) -> None:
         super().__init__(list_url, data_group, **extra)
