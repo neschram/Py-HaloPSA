@@ -16,17 +16,18 @@ Configuration Settings:
     BASE_URL (str): The base path to your API.
     Do not add a trailing slash ("/").
     Example, "https://support.haloservicedesk.com".
+    AUTH_PAGE (str): the authentication page. Typically,
+    this value will be "auth".
+    ACTION_PAGE (str): The API's base query page. Typically,
+    this value will be "api".
     TENANT (str): Your HaloPSA tenant name.
     CLIENT_ID (str): The client ID of your
     HaloPSA integration app.
     CLIENT_SECRET (str): The client secret of your
     HaloPSA integration app.
-    AUTH_PAGE (str): the authentication page.
-    Defaults to "auth".
-    ACTION_PAGE (str): The API's base query page.
-    Defaults to "api".
     SCOPE (str): Authentication scopes or privileges.
-    Defaults to "all".
+    As far as I have been able to discern, this will not work.
+    Keep the value set to "all".
     CONTENT_TYPE (str): The API Content-Type header.
     Defaults to "application/x-www-form-urlencoded".
     GRANT_TYPE (str): The API Authentication type.
@@ -45,14 +46,12 @@ Computed Settings Values:
 # 3rd party
 from decouple import config
 
-# Build the base settings
-BASE_URL: str = config("BASE_URL")
+AUTH_URL: str = f"{config('BASE_URL')}/{config('AUTH_PAGE')}"
+RESOURCE_SERVER: str = f"{config('BASE_URL')}/{config('ACTION_PAGE')}"
 TENANT: str = config("TENANT")
 CLIENT_ID: str = config("CLIENT_ID")
 CLIENT_SECRET: str = config("CLIENT_SECRET")
-SCOPE: str = config("SCOPE", default="all")
-AUTH_PAGE: str = config("AUTH_PAGE", default="auth/token")
-ACTION_PAGE: str = config("ACTION_PAGE", default="api")
+SCOPE: str = config("SCOPE")
 GRANT_TYPE: str = config(
     "GRANT_TYPE",
     default="client_credentials",
@@ -62,7 +61,3 @@ CONTENT_TYPE: str = config(
     default="application/x-www-form-urlencoded",
     cast=str,
 )
-
-# Compile pyHaloPSA settings
-AUTH_URL: str = f"{BASE_URL}/{AUTH_PAGE}"
-RESOURCE_SERVER: str = f"{BASE_URL}/{ACTION_PAGE}"
