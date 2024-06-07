@@ -79,14 +79,16 @@ class BaseResource:
         self._data_group: str = data_group
         super().__init__(**extra)
 
-    def _request_resource(self, headers, query) -> list | dict:
+    def _request_resource(
+        self, headers: dict[str, str], query: dict[str, any]
+    ) -> list | dict:
         """_request_resource
 
         Execute an API request to the resource.
 
         Args:
             headers (dict[str, str]): Request headers
-            query (dict[str, any]): Query parameters
+            query (dict[str, any]): Request query parameters
 
         Returns:
             list | dict: Response data
@@ -94,7 +96,7 @@ class BaseResource:
         return requests.get(
             url=self.list_url,
             headers=headers,
-            data=query,
+            params=query,
         ).json()
 
     def get_resource_count(self) -> int:
@@ -145,16 +147,19 @@ class BaseResource:
         params: dict[str, str] = None,
         pk: int = None,
     ):
-        get_link: str = self.list_url
+        _url: str = self.page
+        # set the auth headers first
         _headers: dict[str, str] = auth
         if headers:
+            # update the headers with additional values
             _headers.update(headers)
+        # one or all records?
         if pk is not None:
-            get_link += f"/{pk}"
+            # add the record id to the request URL
+            _url += f"/{pk}"
+
         if self.data_group is not None:
             return requests.get(
-                url=get_link, headers=_headers, params=params
+                url=_url, headers=_headers, params=params
             ).json()[self.data_group]
-        return requests.get(
-            url=get_link, headers=_headers, params=params
-        ).json()
+        return requests.get(url=_url, headers=_headers, params=params).json()
