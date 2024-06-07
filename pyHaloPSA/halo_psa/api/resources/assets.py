@@ -56,9 +56,9 @@ class AssetsResource(BaseResource):
     # Default List Params
     PAGENATE: bool = False
     """Whether to use Pagination in the response"""
-    PAGE_SIZE: int = 0
+    PAGE_SIZE: int = 5000
     """When using Pagination, the size of the page"""
-    PAGE_NO: int = 0
+    PAGE_NO: int = 1
     """When using Pagination, the page number to return"""
     ORDER: str = "id"
     """The name of the field to order by"""
@@ -76,7 +76,7 @@ class AssetsResource(BaseResource):
     """Filter by Assets belonging to a particular site"""
     USERNAME: str = None
     """Filter by Assets belonging to a particular user"""
-    ASSETGROUP_ID: int = 106
+    ASSETGROUP_ID: int = None
     """Filter by Assets belonging to a particular Asset group"""
     ASSETTYPE_ID: int = None
     """Filter by Assets belonging to a particular Asset type"""
