@@ -6,7 +6,7 @@ import requests
 
 # Py-HaloPSA
 from halo_psa.config import settings
-from halo_psa.utils import BaseData
+from halo_psa.core import BaseData
 
 _AUTH_URL = settings.AUTH_URL
 _CLIENT_ID = settings.CLIENT_ID

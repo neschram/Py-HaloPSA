@@ -1,5 +1,5 @@
 from halo_psa.config.settings import RESOURCE_SERVER
-from halo_psa.api.utils import BaseResource
+from halo_psa.core import BaseResource
 
 
 class AssetsResource(BaseResource):
@@ -10,6 +10,11 @@ class AssetsResource(BaseResource):
     Returns an object containing the count of Assets, and an array of Asset
     objects.
     https://haloacademy.halopsa.com/apidoc/resources/assets
+
+    .. Note::
+
+        The only way I have been successful at retrieving assets is by ensuring
+        my custom API integration has "all" checked in the Permissions tab.
 
     Attributes:
 
@@ -71,7 +76,7 @@ class AssetsResource(BaseResource):
     """Filter by Assets belonging to a particular site"""
     USERNAME: str = None
     """Filter by Assets belonging to a particular user"""
-    ASSETGROUP_ID: int = None
+    ASSETGROUP_ID: int = 106
     """Filter by Assets belonging to a particular Asset group"""
     ASSETTYPE_ID: int = None
     """Filter by Assets belonging to a particular Asset type"""

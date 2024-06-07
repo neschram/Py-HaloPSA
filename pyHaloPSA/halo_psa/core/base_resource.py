@@ -54,11 +54,11 @@ class BaseResource:
         >>>    }
         >>>    def __init__(
         >>>        self,
-        >>>        list_url: str = f"{RESOURCE_SERVER}/{RESOURCE_PAGE}",
+        >>>        page: str = RESOURCE_PAGE,
         >>>        data_group: str = RESOURCE_DATA,
         >>>        **extra,
         >>>    ) -> None:
-        >>>        super().__init__(list_url, data_group, **extra)
+        >>>        super().__init__(page, data_group, **extra)
 
     """
 
@@ -77,10 +77,12 @@ class BaseResource:
     ):
         self._page: str = page
         self._data_group: str = data_group
-        super().__init__(**extra)
+        if extra:
+            for k, v in extra.items():
+                setattr(self, k, v)
 
     def _request_resource(
-        self, headers: dict[str, str], query: dict[str, any]
+        self, headers: dict[str, str], query: dict[str, any], pk: int = None
     ) -> list | dict:
         """_request_resource
 
@@ -94,10 +96,16 @@ class BaseResource:
             list | dict: Response data
         """
         return requests.get(
-            url=self.list_url,
+            url=self.page,
             headers=headers,
             params=query,
         ).json()
+
+    def _build_url(self, pk: int = None) -> str:
+        r_data: str = self.page
+        if pk:
+            r_data += f"/{pk}"
+        return r_data
 
     def get_resource_count(self) -> int:
         """get_resource_count
@@ -131,11 +139,6 @@ class BaseResource:
         return self._page
 
     @property
-    def list_url(self) -> str:
-        """The full API endpoint url for the resource"""
-        return f"{self.page}"
-
-    @property
     def data_group(self) -> str:
         """Response container with list data."""
         return self._data_group
@@ -147,19 +150,24 @@ class BaseResource:
         params: dict[str, str] = None,
         pk: int = None,
     ):
-        _url: str = self.page
-        # set the auth headers first
-        _headers: dict[str, str] = auth
-        if headers:
-            # update the headers with additional values
-            _headers.update(headers)
-        # one or all records?
-        if pk is not None:
-            # add the record id to the request URL
-            _url += f"/{pk}"
+        # set the url
+        _url: str = self._build_url(pk=pk)
 
-        if self.data_group is not None:
-            return requests.get(
-                url=_url, headers=_headers, params=params
-            ).json()[self.data_group]
-        return requests.get(url=_url, headers=_headers, params=params).json()
+        # set the auth headers
+        _headers: dict[str, str] = auth
+        # add any additional headers
+        if headers:
+            _headers.update(headers)
+
+        # get the response data
+        response = requests.get(
+            url=_url, headers=_headers, params=params
+        ).json()
+
+        if type(response) is dict:
+            if len(response.keys()) == 2:
+                opts: list = [key for key in response.keys()]
+                data: str = opts[1]
+                return response[data]
+            return response
+        return response

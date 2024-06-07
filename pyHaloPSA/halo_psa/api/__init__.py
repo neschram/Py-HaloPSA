@@ -70,7 +70,7 @@ class HaloAPI:
         Returns:
             dict | list: Response data.
         """
-        r = self.get_resource(resource)
+        r = self.get_resource(f"{resource.lower()}")
         auth = self.get_credentials()
         return r.get(
             auth=auth,
