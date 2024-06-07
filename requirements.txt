@@ -1,4 +1,0 @@
-requests~=2.32
-python-decouple~=3.8
-sphinx~=7.3
-sphinx-rtd-theme~=2.0
