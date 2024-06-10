@@ -74,7 +74,7 @@ class BaseData:
             value (str): The data's value
         """
         self.data_list.append(name)
-        self.__setattr__(name, value)
+        setattr(self, name, value)
 
     def list_options(self) -> list[str]:
         """list_options

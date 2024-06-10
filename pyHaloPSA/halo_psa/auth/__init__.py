@@ -109,8 +109,10 @@ class HaloAuth:
 
         if response.status_code == 200:  #: login successful
             data = response.json()
+            token_type: str = data["token_type"]
+            access_token: str = data["access_token"]
             self.query_headers = {
-                "Authorization": f"{data['token_type']} {data['access_token']}",
+                "Authorization": f"{token_type} {access_token}",
             }
             self.expire_on = datetime.now() + timedelta(
                 seconds=data["expires_in"]
@@ -138,7 +140,7 @@ class HaloAuth:
         If not, it calls :func:`self._authenticate()` to retrieve an active
         connection to the API endpoint.
         """
-        if (self.logged_in is False) or self._is_expired():
+        if self._is_expired():
             self._authenticate()
 
     @property
