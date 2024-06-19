@@ -1,6 +1,6 @@
 """
-Config.Settings
-===============
+Settings
+========
 
 Default settings for the Py-HaloPSA project.
 
