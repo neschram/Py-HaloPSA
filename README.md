@@ -21,7 +21,7 @@ No docs yet.
 2. Install the package:
 
     ```bash
-    python -m pip install /path/to/Py-HaloPSA/.
+    python -m pip install /path/to/Py-HaloPSA/pyHaloPSA
     ```
 
 ### 2. Configuration
