@@ -19,13 +19,15 @@ class BaseResource:
         When subclassing `BaseResource` be sure to include
         the following class attributes:
 
-        `RESOURCE_PAGE` (str): The Resource's page name
-        `RESOURCE_DATA` (str): Response dictionary key that contains resource
-        record data.
-        `LIST_PARAMS` (dict[str, any]): Query parameters for a GET request.
+        RESOURCE_PAGE (str): The Resource url page name
+        RESOURCE_DATA (str): Response dictionary key that contains resource
+            record data.
+        LIST_PARAMS (dict[str, any]): Query parameters for a GET request.
 
     Example:
     --------
+    
+    A suppliers resource::
 
         >>> class SuppliersResource(BaseResource):
         >>>     RESOURCE_PAGE: str = "Supplier"
