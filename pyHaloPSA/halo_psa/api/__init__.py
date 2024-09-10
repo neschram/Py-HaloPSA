@@ -29,9 +29,9 @@ class HaloAPI:
         Returns:
             object: The equivalent Halo resource attribute
         """
-        if value in self._RESOURCES:
+        if value.lower() in self._RESOURCES:
             return getattr(self, f"_{value}")
-        raise ValueError(f"Resource ({value}) not found")
+        raise ValueError(f"Resource ({value}) not found", f"options include: {self.list_resources()}")
 
     def list_resources(self) -> list[str]:
         """list_resources
