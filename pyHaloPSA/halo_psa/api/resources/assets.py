@@ -111,6 +111,7 @@ class AssetsResource(BaseResource):
         "includechildren": INCLUDE_CHILDREN,
         "contract_id": CONTRACT_ID,
     }
+    """A dictionary mapping of available parameters."""
 
     # Default Lookup Params (RESOURCE_PAGE/ID)
     INCLUDE_DETAILS: bool = True
@@ -124,4 +125,5 @@ class AssetsResource(BaseResource):
         data_group: str = RESOURCE_DATA,
         **extra,
     ):
+        """Initialize the object"""
         super().__init__(list_url, data_group, **extra)
